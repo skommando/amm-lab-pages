@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>房贷计算器 | AMM Lab</title><link rel="stylesheet" href="./style.css"></head>
+<body><main>
+  <header class="page-header"><div class="brand">AMM</div><div><p class="eyebrow">住房贷款 · 还款计划</p><h1>房贷计算器 <span>MORTGAGE</span></h1></div><a class="sibling" href="/tools/salary/" target="_top">薪酬计算器 ↗</a></header>
+  <div class="workspace">
+    <section class="panel inputs" aria-labelledby="input-title"><h2 id="input-title">贷款设定</h2>
+      <form id="loan-form" novalidate>
+        <fieldset class="type-switch"><legend>贷款类型</legend><label><input type="radio" name="loanType" value="fund" checked><span>公积金</span></label><label><input type="radio" name="loanType" value="commercial"><span>商业贷款</span></label><label><input type="radio" name="loanType" value="combined"><span>组合贷款</span></label></fieldset>
+        <label class="field">计算方式<select id="mode"><option value="house">按房价总额</option><option value="loan">按贷款总额</option></select></label>
+        <div id="house-fields" class="two-fields"><label class="field">房价总额 <small>万元</small><input id="house-price" type="number" min="0.0001" step="0.01" value="100" inputmode="decimal"></label><label class="field">首付比例 <small>%</small><input id="down-payment" type="number" min="0" max="99.99" step="0.1" value="15" inputmode="decimal"></label></div>
+        <label class="field" id="loan-field" hidden>贷款总额 <small>万元</small><input id="loan-amount" type="number" step="0.01" value="85" inputmode="decimal"></label>
+        <div class="amount-note" id="amount-note">贷款金额将在计算后显示</div>
+        <fieldset id="fund-fields" class="loan-part"><legend>公积金贷款</legend>
+          <label class="field" id="fund-amount-field" hidden>公积金金额 <small>万元</small><input id="fund-amount" type="number" value="50" step="0.01" inputmode="decimal"></label>
+          <div class="two-fields"><label class="field">公积金年限 <small>年</small><input id="fund-years" type="number" min="1" max="30" step="1" value="30" inputmode="numeric"></label><label class="field">利率参考<select id="fund-preset"><option value="first">首套参考</option><option value="second">二套参考</option><option value="custom">自定义</option></select></label></div>
+          <label class="field">公积金年利率 <small>%</small><input id="fund-rate" type="number" min="0" max="30" step="0.001" value="2.6" inputmode="decimal"></label>
+        </fieldset>
+        <fieldset id="commercial-fields" class="loan-part" hidden><legend>商业贷款</legend><p id="commercial-amount" class="hint"></p><div class="two-fields"><label class="field">商贷年限 <small>年</small><input id="commercial-years" type="number" min="1" max="30" step="1" value="30" inputmode="numeric"></label><label class="field">商贷年利率 <small>%</small><input id="commercial-rate" type="number" min="0" max="30" step="0.001" value="3.05" inputmode="decimal"></label></div><p class="hint">3.05% 为示例，请填写银行合同约定年利率。</p></fieldset>
+        <div class="form-actions"><button class="primary" type="submit">计算还款计划 <span>→</span></button><button type="reset">重置示例</button></div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <div class="output-column"><section class="panel result-panel" aria-labelledby="result-title"><div class="section-heading"><h2 id="result-title">还款方案对比</h2><span class="badge">人民币 / 元</span></div>
+      <div class="method-switch" role="group" aria-label="还款方式"><button id="annuity" type="button" aria-pressed="true"><strong>等额本息</strong><small>同笔贷款每月还款基本相同</small></button><button id="principal" type="button" aria-pressed="false"><strong>等额本金</strong><small>同笔贷款本金均摊，月供递减</small></button></div>
+      <div id="result" hidden><div class="payment-head"><div><p id="payment-label" class="eyebrow">首月月供</p><div class="payment"><span>¥</span><strong id="first-payment"></strong></div><p id="payment-note" class="hint"></p></div><div class="term"><strong id="months"></strong><span>还款期数</span></div></div>
+        <div class="metrics"><div><span>贷款本金</span><strong id="total-principal"></strong></div><div><span>利息总额</span><strong id="total-interest"></strong></div><div><span>还款总额</span><strong id="total-payment"></strong></div></div>
+        <div class="composition" aria-hidden="true"><div id="principal-bar"></div></div><div class="legend"><span id="principal-share"></span><span id="interest-share"></span></div>
+        <p id="comparison" class="comparison"></p>
+      </div><p id="empty-result" class="empty">填写贷款条件，查看两种还款方式的月供和总利息。</p>
+    </section>
+    <section id="chart-panel" class="panel" aria-labelledby="chart-title" hidden>
+      <div class="section-heading"><h2 id="chart-title">每期本金与利息</h2><span class="badge">两种方案 · 同尺度</span></div>
+      <div class="chart-legend"><span><i class="chart-principal"></i>本金</span><span><i class="chart-interest"></i>利息</span></div>
+      <p class="hint" id="chart-scale"></p>
+      <p class="chart-subtitle">全期概览 <span>从上到下，查看完整还款变化</span></p>
+      <div class="chart-head" aria-hidden="true"><span>期数</span><strong>等额本金</strong><strong>等额本息</strong></div>
+      <div id="chart-overview" class="chart-overview"></div>
+      <p class="chart-subtitle">逐期查看 <span>选中一行，查看具体金额</span></p>
+      <div class="chart-head" aria-hidden="true"><span>期数</span><strong>等额本金</strong><strong>等额本息</strong></div>
+      <div id="chart-rows" role="group" aria-label="每期本金和利息对比，按上下方向键切换期数，Home首期，End末期"></div>
+      <div id="chart-detail" aria-live="polite" aria-atomic="true"></div>
+      <p class="hint chart-help">向下滚动查看全部期数；悬停、点击或用 ↑ ↓ 键查看金额，Home / End 跳至首末期。条形总长表示当期月供，组合贷款分项结清后会缩短。</p>
+    </section>
+    <section id="schedule-panel" class="panel" hidden><div class="section-heading"><h2>逐月还款明细</h2><button id="export" type="button">导出 CSV ↓</button></div><p class="hint">组合贷款按月合并；某笔结清后，该笔不再计入月供。金额保留两位小数，最后一期调整尾差。</p><div class="table-scroll" tabindex="0" role="region" aria-label="逐月还款表，可横向滚动"><table><thead><tr><th>期数</th><th>月供</th><th>本金</th><th>利息</th><th>剩余本金</th></tr></thead><tbody id="schedule"></tbody></table></div><div class="table-footer"><span id="row-count"></span><button id="show-all" type="button">展开全部期数</button></div><p id="export-status" role="status"></p></section>
+    <section class="notes"><h2>计算说明</h2><p>等额本息按月利率计算固定月供；等额本金将本金按期均摊，再计算当期剩余本金的利息。此工具假定利率在所填期限内不变，不包含提前还款、费用和利率重定价。</p><p>公积金预设引用 2025 年 5 月 8 日起的参考标准，按年限、首套或二套切换，不会实时更新；二套为参考下限。首付比例和贷款金额由你填写，不代表当地审批额度。实际还款以合同及银行核算为准。</p><p><a href="https://www.beijing.gov.cn/fuwu/bmfw/sy/jrts/tzxx/202505/t20250508_4084240.html" target="_blank" rel="noopener noreferrer">公积金参考利率来源 ↗</a><a href="https://m.fang.com/tools/gjj.html" target="_blank" rel="noopener noreferrer">功能参考：房天下 ↗</a></p></section>
+    </div>
+  </div><footer>AMM LAB · 输入与计算均在浏览器本地完成</footer>
+</main><script type="module" src="./src/ui.mjs"></script></body></html>
