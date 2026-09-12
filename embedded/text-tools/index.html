@@ -4,26 +4,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AMM Text Tools</title>
+    <script src="../tool-theme/runtime.js"></script>
+    <link rel="stylesheet" href="../tool-theme/theme.css">
     <style>
-      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: #f7f8fb; color: #111827; }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; background: var(--tool-canvas); color: var(--tool-text); }
       main { max-width: 1120px; margin: 0 auto; padding: 44px 20px; }
       h1 { font-size: clamp(2rem, 6vw, 4rem); margin: 0; }
       .panel { display: grid; grid-template-columns: 260px 1fr; gap: 18px; margin-top: 28px; }
       .tools { display: grid; gap: 8px; align-content: start; }
-      button { min-height: 44px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #111827; font-weight: 700; cursor: pointer; }
-      button[aria-pressed="true"] { background: #111827; color: white; }
-      select { min-height: 44px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; }
+      button { min-height: 44px; border: 1px solid var(--tool-line); border-radius: 8px; background: var(--tool-panel); color: var(--tool-text); font-weight: 700; cursor: pointer; }
+      button[aria-pressed="true"] { background: var(--tool-strong); color: var(--tool-on-strong); border-color: var(--tool-accent); }
+      select { min-height: 44px; padding: 6px; border: 1px solid var(--tool-line); border-radius: 6px; }
       label { display: inline-flex; align-items: center; gap: 8px; margin-right: 8px; }
       .actions { display: flex; gap: 8px; } .actions button { padding: 0 20px; }
-      #status { min-height: 24px; color: #475569; overflow-wrap: anywhere; }
-      textarea { min-height: 220px; border: 1px solid #d9deea; border-radius: 8px; padding: 14px; font: 14px/1.6 ui-monospace, Consolas, monospace; }
+      #status { min-height: 24px; color: var(--tool-secondary); overflow-wrap: anywhere; }
+      textarea { min-height: 220px; border: 1px solid var(--tool-line); border-radius: 8px; padding: 14px; font: 14px/1.6 ui-monospace, Consolas, monospace; }
       .work { display: grid; gap: 12px; }
+      .tool-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+      select, textarea { background: var(--tool-inset); color: var(--tool-text); }
+      #output { background: var(--tool-panel); }
+      .work small, .work p, main > p { color: var(--tool-muted); }
+      .tools button:hover, .actions button:hover { background: var(--tool-raised); }
+      .tools button[aria-pressed="true"]:hover { background: var(--tool-strong-hover); }
+      @media print { body { background: white; } }
       @media (max-width: 760px) { .panel { grid-template-columns: 1fr; } }
     </style>
   </head>
   <body>
     <main>
-      <h1>文本工具箱</h1>
+      <header class="tool-header"><h1>文本工具箱</h1><button type="button" class="tool-theme-toggle" data-tool-theme-toggle>切换到暗色模式</button></header>
       <p>清理文本、HTML 和表格的小工具箱，所有处理都在浏览器本地完成。</p>
       <section class="panel">
         <div class="tools">

@@ -1,0 +1,79 @@
+/* 三个独立工具共用配色；计算逻辑不依赖主题。 */
+:root {
+  color-scheme: light;
+  --tool-canvas: #f2f4f7;
+  --tool-panel: #ffffff;
+  --tool-inset: #f8f9fa;
+  --tool-raised: #eef2f6;
+  --tool-text: #1d2939;
+  --tool-secondary: #475467;
+  --tool-muted: #667085;
+  --tool-placeholder: #7c899a;
+  --tool-line: #d0d5dd;
+  --tool-line-soft: #e4e7ec;
+  --tool-strong: #1d2939;
+  --tool-strong-hover: #344054;
+  --tool-on-strong: #ffffff;
+  --tool-accent: #0087a3;
+  --tool-accent-soft: #e5f4f7;
+  --tool-focus: #0087a355;
+  --tool-link: #036f88;
+  --tool-success: #087e58;
+  --tool-success-soft: #eaf7f1;
+  --tool-warning: #a15b08;
+  --tool-warning-soft: #fff7e5;
+  --tool-danger: #b42318;
+  --tool-danger-soft: #fff0ee;
+  --tool-chart-principal: #344054;
+  --tool-chart-interest: #c18956;
+  --tool-grid: #98a2b32b;
+}
+@media screen {
+  html[data-site-theme="dark"] {
+    color-scheme: dark;
+    --tool-canvas: #10161d;
+    --tool-panel: #17212b;
+    --tool-inset: #111a22;
+    --tool-raised: #22313e;
+    --tool-text: #dce5ea;
+    --tool-secondary: #afbec9;
+    --tool-muted: #94a5b3;
+    --tool-placeholder: #879aa9;
+    --tool-line: #30404d;
+    --tool-line-soft: #293844;
+    --tool-strong: #294858;
+    --tool-strong-hover: #355d70;
+    --tool-on-strong: #edf6fa;
+    --tool-accent: #64c4d7;
+    --tool-accent-soft: #1c3540;
+    --tool-focus: #64c4d766;
+    --tool-link: #81c5d8;
+    --tool-success: #6ed4ae;
+    --tool-success-soft: #153b30;
+    --tool-warning: #e4bc7e;
+    --tool-warning-soft: #3c3020;
+    --tool-danger: #ffa095;
+    --tool-danger-soft: #442923;
+    --tool-chart-principal: #7db9cc;
+    --tool-chart-interest: #dba36e;
+    --tool-grid: #63809726;
+  }
+}
+html { background: var(--tool-canvas); color: var(--tool-text); }
+html button.tool-theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 36px; padding: 8px 12px; flex-shrink: 0;
+  border: 1px solid var(--tool-line); border-radius: 6px;
+  background: var(--tool-panel); color: var(--tool-secondary);
+  font: 600 12px/1.4 system-ui, "Microsoft YaHei", sans-serif;
+  cursor: pointer;
+}
+html button.tool-theme-toggle:hover { background: var(--tool-raised); border-color: var(--tool-accent); color: var(--tool-text); }
+html[data-tool-embedded] [data-tool-theme-toggle] { display: none; }
+:where(button,a,input,select,textarea):focus-visible { outline: 2px solid var(--tool-accent); outline-offset: 3px; }
+input { accent-color: var(--tool-accent); }
+input::placeholder, textarea::placeholder { color: var(--tool-placeholder); opacity: 1; }
+@media print {
+  html { color-scheme: light; }
+  html button.tool-theme-toggle { display: none; }
+}

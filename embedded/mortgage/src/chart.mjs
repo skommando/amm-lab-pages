@@ -27,7 +27,7 @@ export function chartOverviewHtml(model) {
       const interest = row[method].interest / model.maxPayment * 100;
       return `<rect class="chart-principal" x="0" y="${index * height}" width="${principal}" height="${height}"/><rect class="chart-interest" x="${principal}" y="${index * height}" width="${interest}" height="${height}"/>`;
     }).join('');
-    return `<svg viewBox="0 0 100 280" preserveAspectRatio="none" role="img" aria-label="${method === 'principal' ? '等额本金' : '等额本息'}，从上到下为第1至${count}期，本金深蓝、利息橙色，具体金额见下方逐期查看">${bars}</svg>`;
+    return `<svg viewBox="0 0 100 280" preserveAspectRatio="none" role="img" aria-label="${method === 'principal' ? '等额本金' : '等额本息'}，从上到下为第1至${count}期，每条分为本金与利息，具体金额见下方逐期查看">${bars}</svg>`;
   }).join('');
   return ticks + columns;
 }

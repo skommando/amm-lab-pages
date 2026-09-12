@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>薪酬计算器 — Awesome Salary | AMM Lab</title>
+<script src="../tool-theme/runtime.js"></script>
+<link rel="stylesheet" href="../tool-theme/theme.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,23 +16,25 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        surface: '#F2F4F7',
-        card: '#FFFFFF',
-        border: '#D0D5DD',
-        'border-light': '#E4E7EC',
-        'text-primary': '#1D2939',
-        'text-secondary': '#475467',
-        'text-muted': '#667085',
-        'text-placeholder': '#98A2B3',
+        surface: 'var(--tool-canvas)',
+        input: 'var(--tool-inset)',
+        card: 'var(--tool-panel)',
+        border: 'var(--tool-line)',
+        'border-light': 'var(--tool-line-soft)',
+        'text-primary': 'var(--tool-text)',
+        'text-secondary': 'var(--tool-secondary)',
+        'text-muted': 'var(--tool-muted)',
+        'text-placeholder': 'var(--tool-placeholder)',
         accent: {
-          cyan: '#00f0ff',
-          steel: '#00d2ff',
-          dark: '#1D2939',
-          hover: '#344054'
+          cyan: 'var(--tool-accent)',
+          steel: 'var(--tool-accent)',
+          dark: 'var(--tool-strong)',
+          soft: 'var(--tool-accent-soft)',
+          hover: 'var(--tool-strong-hover)'
         },
-        success: { DEFAULT: '#10B981', bg: 'rgba(16,185,129,0.08)' },
-        warning: { DEFAULT: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
-        danger: { DEFAULT: '#EF4444', bg: 'rgba(239,68,68,0.08)' }
+        success: { DEFAULT: 'var(--tool-success)', bg: 'var(--tool-success-soft)' },
+        warning: { DEFAULT: 'var(--tool-warning)', bg: 'var(--tool-warning-soft)' },
+        danger: { DEFAULT: 'var(--tool-danger)', bg: 'var(--tool-danger-soft)' }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'Microsoft YaHei', 'sans-serif'],
@@ -45,8 +49,8 @@ tailwind.config = {
   * { box-sizing: border-box; }
 
   body {
-    background: #F2F4F7;
-    color: #1D2939;
+    background: var(--tool-canvas);
+    color: var(--tool-text);
     font-family: 'Inter', system-ui, -apple-system, 'Microsoft YaHei', sans-serif;
     -webkit-font-smoothing: antialiased;
     font-size: 0.9375rem;
@@ -54,27 +58,27 @@ tailwind.config = {
   }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #F2F4F7; }
-  ::-webkit-scrollbar-thumb { background: #98A2B3; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #667085; }
+  ::-webkit-scrollbar-track { background: var(--tool-canvas); }
+  ::-webkit-scrollbar-thumb { background: var(--tool-placeholder); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--tool-muted); }
 
   input[type=number]::-webkit-outer-spin-button,
   input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
 
   .tech-dot-grid {
-    background-image: radial-gradient(#98A2B3 1px, transparent 1px);
+    background-image: radial-gradient(var(--tool-placeholder) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 
   .card {
-    background: #FFFFFF;
-    border: 1px solid #D0D5DD;
+    background: var(--tool-panel);
+    border: 1px solid var(--tool-line);
     border-radius: 0.75rem;
     transition: all 150ms;
     overflow: hidden;
   }
-  .card:hover { border-color: #1D2939; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .card:hover { border-color: var(--tool-text); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center;
@@ -86,36 +90,36 @@ tailwind.config = {
   }
   .btn:active { transform: scale(0.97); }
   .btn-primary {
-    background: #1D2939; color: white; border: 1px solid #1D2939;
+    background: var(--tool-strong); color: var(--tool-on-strong); border: 1px solid var(--tool-strong);
   }
-  .btn-primary:hover { background: #344054; }
+  .btn-primary:hover { background: var(--tool-strong-hover); }
   .btn-secondary {
-    background: #FFFFFF; color: #475467; border: 1px solid #D0D5DD;
+    background: var(--tool-panel); color: var(--tool-secondary); border: 1px solid var(--tool-line);
   }
-  .btn-secondary:hover { background: #F2F4F7; border-color: #1D2939; }
+  .btn-secondary:hover { background: var(--tool-canvas); border-color: var(--tool-text); }
   .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.6875rem; min-height: 24px; }
 
   .form-input {
-    background: #F8F9FA; border: 1px solid #D0D5DD; border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem; color: #1D2939; font-size: 0.875rem;
+    background: var(--tool-inset); border: 1px solid var(--tool-line); border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem; color: var(--tool-text); font-size: 0.875rem;
     font-family: 'JetBrains Mono', monospace; transition: all 150ms;
   }
   .form-input:focus {
-    outline: none; border-color: #00d2ff;
-    box-shadow: 0 0 0 3px rgba(0,210,255,0.12);
+    outline: none; border-color: var(--tool-accent);
+    box-shadow: 0 0 0 3px var(--tool-focus);
   }
-  .form-input::placeholder { color: #98A2B3; }
+  .form-input::placeholder { color: var(--tool-placeholder); }
 
   .data-table { width: 100%; border-collapse: collapse; }
   .data-table th {
     padding: 0.5625rem 0.75rem; font-size: 0.6875rem; font-weight: 600;
-    color: #667085; text-transform: uppercase; letter-spacing: 0.05em;
-    border-bottom: 1px solid #D0D5DD; white-space: nowrap; text-align: left;
+    color: var(--tool-muted); text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--tool-line); white-space: nowrap; text-align: left;
     font-family: 'JetBrains Mono', monospace;
   }
   .data-table td {
     padding: 0.5625rem 0.75rem; font-size: 0.8125rem;
-    border-bottom: 1px solid #E4E7EC;
+    border-bottom: 1px solid var(--tool-line-soft);
     font-family: 'JetBrains Mono', monospace;
   }
 
@@ -129,12 +133,16 @@ tailwind.config = {
     .card { border: 1px solid #ddd; background: white; }
   }
 
+  .data-table input { color: var(--tool-text); }
+  .data-table tbody tr:hover { background: var(--tool-raised); }
+  .data-table tbody tr.bg-accent-soft:hover { background: var(--tool-accent-soft); }
+  .data-table tbody tr.bg-warning-bg:hover { background: var(--tool-warning-soft); }
   /* Section header badge */
   .sec-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.6875rem;
-    background: #1D2939;
-    color: white;
+    background: var(--tool-strong);
+    color: var(--tool-on-strong);
     padding: 0.125rem 0.5rem;
     border-radius: 0.125rem;
   }
@@ -148,20 +156,21 @@ tailwind.config = {
 <div class="relative z-10">
 
 <!-- HEADER -->
-<header class="mb-6 flex items-center justify-between no-print">
+<header class="mb-6 flex flex-wrap gap-4 items-center justify-between no-print">
   <div class="flex items-center space-x-3">
-    <div class="w-8 h-8 bg-[#1D2939] border border-[#344054] rounded flex items-center justify-center p-1">
+    <div class="w-8 h-8 bg-accent-dark border border-accent-hover rounded flex items-center justify-center p-1">
       <span class="font-tech text-white text-[11px] font-bold tracking-widest leading-none">AMM</span>
     </div>
     <div>
       <div class="flex items-center space-x-2">
         <span class="sec-badge">TOOL_01</span>
-        <span class="font-mono text-[10px] text-[#667085] tracking-wider uppercase">— 深圳五险一金 · 累进预扣个税 · 年终奖优化</span>
+        <span class="font-mono text-[10px] text-text-muted tracking-wider uppercase">— 深圳五险一金 · 累进预扣个税 · 年终奖优化</span>
       </div>
-      <h1 class="text-xl font-bold text-[#1D2939] mt-1 font-sans tracking-tight">薪酬计算器 <span class="font-tech text-[#98A2B3] font-light text-base">AWESOME SALARY</span></h1>
+      <h1 class="text-xl font-bold text-text-primary mt-1 font-sans tracking-tight">薪酬计算器 <span class="font-tech text-text-placeholder font-light text-base">AWESOME SALARY</span></h1>
     </div>
   </div>
-  <div class="flex gap-2">
+  <div class="flex flex-wrap items-center gap-2 ml-auto">
+    <button type="button" class="tool-theme-toggle" data-tool-theme-toggle>切换到暗色模式</button>
     <button @click="printSalary()" class="btn btn-secondary btn-xs">打印</button>
     <button @click="exportSalaryCSV()" class="btn btn-primary btn-xs">导出 CSV</button>
   </div>
@@ -173,23 +182,23 @@ tailwind.config = {
   <!-- 工资设定 -->
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-4">
-      <span class="w-1.5 h-4 bg-[#00d2ff] rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">工资设定</h3>
+      <span class="w-1.5 h-4 bg-accent-steel rounded-full"></span>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">工资设定</h3>
     </div>
     <div class="space-y-3">
       <div>
-        <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">税前月薪 (计税) ¥</label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">税前月薪 (计税) ¥</label>
         <input type="number" x-model.number="sc.salary" @input="calcAll()" class="form-input w-full mt-1" placeholder="25000">
       </div>
       <div>
-        <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">社保缴费基数 ¥ <span class="text-[#98A2B3] font-normal">留空=月薪</span></label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">社保缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
         <input type="number" x-model.number="sc.siBase" @input="calcAll()" class="form-input w-full mt-1" placeholder="同月薪">
       </div>
       <div>
-        <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">公积金缴费基数 ¥ <span class="text-[#98A2B3] font-normal">留空=月薪</span></label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">公积金缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
         <input type="number" x-model.number="sc.hfBase" @input="calcAll()" class="form-input w-full mt-1" placeholder="同月薪">
       </div>
-      <div class="flex gap-4 text-[10px] text-[#667085] pt-2 border-t border-[#E4E7EC] font-mono">
+      <div class="flex gap-4 text-[10px] text-text-muted pt-2 border-t border-border-light font-mono">
         <span x-text="'社保基数: ¥'+((sc.siBase||sc.salary)||0).toLocaleString()"></span>
         <span x-text="'公积金基数: ¥'+((sc.hfBase||sc.salary)||0).toLocaleString()"></span>
       </div>
@@ -199,35 +208,35 @@ tailwind.config = {
   <!-- 年终奖拆分 -->
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-4">
-      <span class="w-1.5 h-4 bg-amber-500 rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">年终奖拆分</h3>
+      <span class="w-1.5 h-4 bg-warning rounded-full"></span>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">年终奖拆分</h3>
     </div>
     <div class="space-y-3">
       <div>
-        <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">年终奖总额 ¥</label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">年终奖总额 ¥</label>
         <input type="number" x-model.number="sc.annualBonus" @input="calcAll()" class="form-input w-full mt-1" placeholder="0">
       </div>
-      <div class="border-t border-[#E4E7EC] pt-3">
-        <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">一次性奖金 ¥ <span class="text-[#667085] font-normal">(单独计税)</span></label>
+      <div class="border-t border-border-light pt-3">
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">一次性奖金 ¥ <span class="text-text-muted font-normal">(单独计税)</span></label>
         <input type="number" x-model.number="sc.bonusLumpSum" @input="calcAll()" class="form-input w-full mt-1" placeholder="0">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">并入月份</label>
+          <label class="text-[10px] font-mono text-text-muted font-bold uppercase">并入月份</label>
           <input type="number" x-model.number="sc.bonusMonth1" @input="calcAll()" class="form-input w-full mt-1" min="1" max="12" style="appearance:auto;-moz-appearance:textfield">
         </div>
         <div>
-          <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">并入金额 ¥</label>
+          <label class="text-[10px] font-mono text-text-muted font-bold uppercase">并入金额 ¥</label>
           <input type="number" x-model.number="sc.bonusAmount1" @input="calcAll()" class="form-input w-full mt-1" placeholder="0">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">并入月份</label>
+          <label class="text-[10px] font-mono text-text-muted font-bold uppercase">并入月份</label>
           <input type="number" x-model.number="sc.bonusMonth2" @input="calcAll()" class="form-input w-full mt-1" min="1" max="12" style="appearance:auto;-moz-appearance:textfield">
         </div>
         <div>
-          <label class="text-[10px] font-mono text-[#667085] font-bold uppercase">并入金额 ¥</label>
+          <label class="text-[10px] font-mono text-text-muted font-bold uppercase">并入金额 ¥</label>
           <input type="number" x-model.number="sc.bonusAmount2" @input="calcAll()" class="form-input w-full mt-1" placeholder="0">
         </div>
       </div>
@@ -238,22 +247,22 @@ tailwind.config = {
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-4">
       <span class="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">年度汇总</h3>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">年度汇总</h3>
     </div>
     <div class="space-y-2 text-sm">
-      <div class="flex justify-between"><span class="text-[#667085]">工资收入</span><span class="font-mono text-[#1D2939]" x-text="'¥'+((sc.salary*12)+(sc.bonusAmount1||0)+(sc.bonusAmount2||0)+(sc.extraIncome||[]).reduce((a,b)=>a+b,0)).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">一次性奖金</span><span class="font-mono text-[#1D2939]" x-text="'¥'+(sc.bonusLumpSum||0).toLocaleString()"></span></div>
-      <div class="flex justify-between text-xs" x-show="sc.bonusLumpSum>0"><span class="text-[#98A2B3] pl-3">月均 ÷12 → <span x-text="'¥'+Math.round(sc.bonusLumpSum/12).toLocaleString()"></span></span><span class="font-mono text-[#667085]" x-text="'税率 '+(sc._bonusRate*100||0)+'% 速扣 ¥'+(sc._bonusQd||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">奖金个税</span><span class="font-mono text-[#EF4444]" x-text="'¥'+(sc.bonusTax||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">奖金到手</span><span class="font-mono text-[#10B981]" x-text="'¥'+(sc.bonusNet||0).toLocaleString()"></span></div>
-      <div class="flex justify-between border-t border-[#E4E7EC] pt-2"><span class="text-[#667085]">年度总收入</span><span class="font-mono text-[#1D2939] font-bold" x-text="'¥'+(sc.sumTotalIncome||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">五险一金 个人</span><span class="font-mono text-[#667085]" x-text="'¥'+((_siPersMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)).total*12).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">五险一金 公司</span><span class="font-mono text-[#667085]" x-text="'¥'+(_siCorpMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)*12).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#667085]">专项附加扣除</span><span class="font-mono text-[#667085]" x-text="'¥'+(sc.sumTotalSpecial||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#EF4444] font-semibold">年度个税</span><span class="font-mono text-[#EF4444] font-semibold" x-text="'¥'+(sc.sumTotalTax||0).toLocaleString()"></span></div>
-      <div class="flex justify-between border-t border-[#1D2939] pt-2"><span class="text-[#10B981] font-bold">年度税后到手</span><span class="font-mono text-[#10B981] font-bold text-base" x-text="'¥'+(sc.sumTotalNet||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-[#475467]">公积金总收入 (个人+公司)</span><span class="font-mono text-[#475467]" x-text="'¥'+(sc.sumTotalHF||0).toLocaleString()"></span></div>
-      <div class="flex justify-between border-t-2 border-[#00d2ff] pt-2"><span class="text-[#1D2939] font-extrabold text-sm">年度总到手</span><span class="font-tech text-[#1D2939] font-bold text-lg" x-text="'¥'+(sc.sumGrandNet||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">工资收入</span><span class="font-mono text-text-primary" x-text="'¥'+((sc.salary*12)+(sc.bonusAmount1||0)+(sc.bonusAmount2||0)+(sc.extraIncome||[]).reduce((a,b)=>a+b,0)).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">一次性奖金</span><span class="font-mono text-text-primary" x-text="'¥'+(sc.bonusLumpSum||0).toLocaleString()"></span></div>
+      <div class="flex justify-between text-xs" x-show="sc.bonusLumpSum>0"><span class="text-text-placeholder pl-3">月均 ÷12 → <span x-text="'¥'+Math.round(sc.bonusLumpSum/12).toLocaleString()"></span></span><span class="font-mono text-text-muted" x-text="'税率 '+(sc._bonusRate*100||0)+'% 速扣 ¥'+(sc._bonusQd||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">奖金个税</span><span class="font-mono text-danger" x-text="'¥'+(sc.bonusTax||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">奖金到手</span><span class="font-mono text-success" x-text="'¥'+(sc.bonusNet||0).toLocaleString()"></span></div>
+      <div class="flex justify-between border-t border-border-light pt-2"><span class="text-text-muted">年度总收入</span><span class="font-mono text-text-primary font-bold" x-text="'¥'+(sc.sumTotalIncome||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">五险一金 个人</span><span class="font-mono text-text-muted" x-text="'¥'+((_siPersMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)).total*12).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">五险一金 公司</span><span class="font-mono text-text-muted" x-text="'¥'+(_siCorpMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)*12).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">专项附加扣除</span><span class="font-mono text-text-muted" x-text="'¥'+(sc.sumTotalSpecial||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-danger font-semibold">年度个税</span><span class="font-mono text-danger font-semibold" x-text="'¥'+(sc.sumTotalTax||0).toLocaleString()"></span></div>
+      <div class="flex justify-between border-t border-accent-dark pt-2"><span class="text-success font-bold">年度税后到手</span><span class="font-mono text-success font-bold text-base" x-text="'¥'+(sc.sumTotalNet||0).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-secondary">公积金总收入 (个人+公司)</span><span class="font-mono text-text-secondary" x-text="'¥'+(sc.sumTotalHF||0).toLocaleString()"></span></div>
+      <div class="flex justify-between border-t-2 border-accent-steel pt-2"><span class="text-text-primary font-extrabold text-sm">年度总到手</span><span class="font-tech text-text-primary font-bold text-lg" x-text="'¥'+(sc.sumGrandNet||0).toLocaleString()"></span></div>
     </div>
   </div>
 </div>
@@ -261,8 +270,8 @@ tailwind.config = {
 <!-- ROW 2: Monthly Table -->
 <div class="card p-5 mb-4">
   <div class="flex items-center space-x-2 mb-3">
-    <span class="w-1.5 h-4 bg-[#1D2939] rounded-full"></span>
-    <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">月度明细 (累进预扣)</h3>
+    <span class="w-1.5 h-4 bg-accent-dark rounded-full"></span>
+    <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">月度明细 (累进预扣)</h3>
   </div>
   <div class="overflow-x-auto">
     <table class="data-table text-xs w-full" style="min-width:1300px">
@@ -271,22 +280,22 @@ tailwind.config = {
       </tr></thead>
       <tbody>
         <template x-for="m in sc.monthly" :key="m.month">
-          <tr :class="(m.month===sc.bonusMonth1||m.month===sc.bonusMonth2)?'bg-amber-50/50':''">
+          <tr :class="(m.month===sc.bonusMonth1||m.month===sc.bonusMonth2)?'bg-warning-bg':''">
             <td class="text-right font-bold" x-text="m.month+'月'"></td>
             <td class="text-right" x-text="'¥'+m.income.toLocaleString()"></td>
-            <td class="text-right" :class="(m.month===sc.bonusMonth1&&sc.bonusAmount1>0)||(m.month===sc.bonusMonth2&&sc.bonusAmount2>0)?'text-amber-600 font-bold':''" x-text="(m.month===sc.bonusMonth1?sc.bonusAmount1:0)+(m.month===sc.bonusMonth2?sc.bonusAmount2:0)"></td>
-            <td class="text-right"><input type="number" :value="m.extraIn" @input="_updateExtraMonth(m.month,'extraIncome',$event.target.value)" class="w-20 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" placeholder="0"></td>
-            <td class="text-right text-[#667085]" x-text="'¥'+m.siPension.toLocaleString()"></td>
-            <td class="text-right text-[#667085]" x-text="'¥'+m.siMedical.toLocaleString()"></td>
-            <td class="text-right text-[#667085]" x-text="'¥'+m.siUnemp.toLocaleString()"></td>
-            <td class="text-right text-[#667085]" x-text="'¥'+m.siHF.toLocaleString()"></td>
-            <td class="text-right"><input type="number" :value="m.extraDe" @input="_updateExtraMonth(m.month,'extraDeduction',$event.target.value)" class="w-20 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" placeholder="0"></td>
-            <td class="text-right text-[#667085]" x-text="'¥'+m.specialM.toLocaleString()"></td>
-            <td class="text-right" :class="m.cumTaxable>0?'text-amber-600 font-bold':'text-[#667085]'" x-text="'¥'+m.cumTaxable.toLocaleString()"></td>
-            <td class="text-right text-[#667085]" x-text="m.cumTaxable>0?m.rate+'%':'-'"></td>
-            <td class="text-right text-[#EF4444]" x-text="m.cumTax>0?'¥'+m.cumTax.toLocaleString():'¥0'"></td>
-            <td class="text-right" :class="m.monthTax>0?'text-[#EF4444]':'text-[#10B981]'" x-text="'¥'+m.monthTax.toLocaleString()"></td>
-            <td class="text-right text-[#10B981] font-bold" x-text="'¥'+m.net.toLocaleString()"></td>
+            <td class="text-right" :class="(m.month===sc.bonusMonth1&&sc.bonusAmount1>0)||(m.month===sc.bonusMonth2&&sc.bonusAmount2>0)?'text-warning font-bold':''" x-text="(m.month===sc.bonusMonth1?sc.bonusAmount1:0)+(m.month===sc.bonusMonth2?sc.bonusAmount2:0)"></td>
+            <td class="text-right"><input type="number" :value="m.extraIn" @input="_updateExtraMonth(m.month,'extraIncome',$event.target.value)" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" placeholder="0"></td>
+            <td class="text-right text-text-muted" x-text="'¥'+m.siPension.toLocaleString()"></td>
+            <td class="text-right text-text-muted" x-text="'¥'+m.siMedical.toLocaleString()"></td>
+            <td class="text-right text-text-muted" x-text="'¥'+m.siUnemp.toLocaleString()"></td>
+            <td class="text-right text-text-muted" x-text="'¥'+m.siHF.toLocaleString()"></td>
+            <td class="text-right"><input type="number" :value="m.extraDe" @input="_updateExtraMonth(m.month,'extraDeduction',$event.target.value)" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" placeholder="0"></td>
+            <td class="text-right text-text-muted" x-text="'¥'+m.specialM.toLocaleString()"></td>
+            <td class="text-right" :class="m.cumTaxable>0?'text-warning font-bold':'text-text-muted'" x-text="'¥'+m.cumTaxable.toLocaleString()"></td>
+            <td class="text-right text-text-muted" x-text="m.cumTaxable>0?m.rate+'%':'-'"></td>
+            <td class="text-right text-danger" x-text="m.cumTax>0?'¥'+m.cumTax.toLocaleString():'¥0'"></td>
+            <td class="text-right" :class="m.monthTax>0?'text-danger':'text-success'" x-text="'¥'+m.monthTax.toLocaleString()"></td>
+            <td class="text-right text-success font-bold" x-text="'¥'+m.net.toLocaleString()"></td>
           </tr>
         </template>
       </tbody>
@@ -301,8 +310,8 @@ tailwind.config = {
   <div class="card p-5">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center space-x-2">
-        <span class="w-1.5 h-4 bg-[#1D2939] rounded-full"></span>
-        <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">五险一金参数</h3>
+        <span class="w-1.5 h-4 bg-accent-dark rounded-full"></span>
+        <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">五险一金参数</h3>
       </div>
       <button @click="sc.siLocked=!sc.siLocked" class="btn btn-xs" :class="sc.siLocked?'btn-primary':'btn-secondary'" x-text="sc.siLocked?'🔒 已锁定':'🔓 已解锁'"></button>
     </div>
@@ -311,18 +320,18 @@ tailwind.config = {
       <tbody>
         <template x-for="(lo,k) in sc.siLo" :key="k">
           <tr>
-            <td class="text-right font-bold text-[#1D2939]" x-text="{pension:'养老保险',medical:'医疗保险',unemp:'失业保险',injury:'工伤保险',maternity:'生育保险',hf:'住房公积金'}[k]"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siLo[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-20 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siHi[k]" @input="calcAll()" :disabled="sc.siLocked||sc.siHi[k]=='-'" class="w-20 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siCorp[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-16 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siPers[k]" @input="calcAll()" :disabled="sc.siLocked||(k==='injury'||k==='maternity')" class="w-16 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
+            <td class="text-right font-bold text-text-primary" x-text="{pension:'养老保险',medical:'医疗保险',unemp:'失业保险',injury:'工伤保险',maternity:'生育保险',hf:'住房公积金'}[k]"></td>
+            <td class="text-right"><input type="number" x-model.number="sc.siLo[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" x-model.number="sc.siHi[k]" @input="calcAll()" :disabled="sc.siLocked||sc.siHi[k]=='-'" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" x-model.number="sc.siCorp[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" x-model.number="sc.siPers[k]" @input="calcAll()" :disabled="sc.siLocked||(k==='injury'||k==='maternity')" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
           </tr>
         </template>
-        <tr class="border-t-2 border-[#00d2ff]">
-          <td class="font-bold text-[#1D2939]">公积金比例</td><td colspan="2"></td>
+        <tr class="border-t-2 border-accent-steel">
+          <td class="font-bold text-text-primary">公积金比例</td><td colspan="2"></td>
           <td colspan="2" class="text-right">
-            <input type="range" min="5" max="12" x-model.number="sc.hfPct" @input="calcAll()" :disabled="sc.siLocked" class="w-full accent-[#1D2939]" :class="sc.siLocked?'opacity-50':''">
-            <span class="font-mono font-bold text-[#1D2939]" x-text="sc.hfPct+'%'"></span>
+            <input type="range" min="5" max="12" x-model.number="sc.hfPct" @input="calcAll()" :disabled="sc.siLocked" class="w-full accent-accent-steel" :class="sc.siLocked?'opacity-50':''">
+            <span class="font-mono font-bold text-text-primary" x-text="sc.hfPct+'%'"></span>
           </td>
         </tr>
       </tbody>
@@ -333,17 +342,17 @@ tailwind.config = {
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-4">
       <span class="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">专项附加扣除 (每月)</h3>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">专项附加扣除 (每月)</h3>
     </div>
     <div class="space-y-3 text-sm">
-      <div class="flex items-center justify-between"><span>子女教育</span><div class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">2000/孩</span><input type="number" x-model.number="sc.sdChildren" @input="calcAll()" class="w-16 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" min="0" placeholder="0" style="appearance:auto;-moz-appearance:textfield"><span class="text-xs text-[#98A2B3] font-mono">个</span></div></div>
-      <div class="flex items-center justify-between"><span>3岁以下婴幼儿</span><div class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">2000/孩</span><input type="number" x-model.number="sc.sdInfant" @input="calcAll()" class="w-16 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" min="0" placeholder="0" style="appearance:auto;-moz-appearance:textfield"><span class="text-xs text-[#98A2B3] font-mono">个</span></div></div>
-      <div class="flex items-center justify-between"><span>继续教育</span><div class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">¥/月</span><input type="number" x-model.number="sc.sdContinueEdu" @input="calcAll()" class="w-20 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" placeholder="0"></div></div>
-      <div class="flex items-center justify-between"><span>住房贷款利息</span><span class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">1000/月</span><input type="checkbox" x-model="sc.sdHousingLoan" @change="if(sc.sdHousingLoan)sc.sdHousingRent=false;calcAll()" class="accent-[#1D2939]"></span></div>
-      <div class="flex items-center justify-between"><span>住房租金</span><span class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">1500/月</span><input type="checkbox" x-model="sc.sdHousingRent" @change="if(sc.sdHousingRent)sc.sdHousingLoan=false;calcAll()" class="accent-[#1D2939]"></span></div>
-      <div class="flex items-center justify-between"><span>赡养老人 <span class="text-xs text-[#98A2B3] font-mono">(独生3000/非独最多1500)</span></span><div class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">¥/月</span><input type="number" x-model.number="sc.sdElderly" @input="calcAll()" class="w-24 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" placeholder="0"></div></div>
-      <div class="flex items-center justify-between"><span>大病医疗 <span class="text-xs text-[#98A2B3] font-mono">(年度,自付超15000,上限80000)</span></span><div class="flex items-center gap-2"><span class="text-xs text-[#98A2B3] font-mono">¥</span><input type="number" x-model.number="sc.sdMajorIllness" @input="calcAll()" class="w-24 text-right bg-[#F8F9FA] border border-[#D0D5DD] rounded px-1 text-xs font-mono" placeholder="0"></div></div>
-      <div class="text-[10px] text-[#667085] pt-2 border-t border-[#E4E7EC] font-mono">房贷利息与住房租金互斥，二选一</div>
+      <div class="flex items-center justify-between"><span>子女教育</span><div class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">2000/孩</span><input type="number" x-model.number="sc.sdChildren" @input="calcAll()" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" min="0" placeholder="0" style="appearance:auto;-moz-appearance:textfield"><span class="text-xs text-text-placeholder font-mono">个</span></div></div>
+      <div class="flex items-center justify-between"><span>3岁以下婴幼儿</span><div class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">2000/孩</span><input type="number" x-model.number="sc.sdInfant" @input="calcAll()" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" min="0" placeholder="0" style="appearance:auto;-moz-appearance:textfield"><span class="text-xs text-text-placeholder font-mono">个</span></div></div>
+      <div class="flex items-center justify-between"><span>继续教育</span><div class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">¥/月</span><input type="number" x-model.number="sc.sdContinueEdu" @input="calcAll()" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" placeholder="0"></div></div>
+      <div class="flex items-center justify-between"><span>住房贷款利息</span><span class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">1000/月</span><input type="checkbox" x-model="sc.sdHousingLoan" @change="if(sc.sdHousingLoan)sc.sdHousingRent=false;calcAll()" class="accent-accent-steel"></span></div>
+      <div class="flex items-center justify-between"><span>住房租金</span><span class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">1500/月</span><input type="checkbox" x-model="sc.sdHousingRent" @change="if(sc.sdHousingRent)sc.sdHousingLoan=false;calcAll()" class="accent-accent-steel"></span></div>
+      <div class="flex items-center justify-between"><span>赡养老人 <span class="text-xs text-text-placeholder font-mono">(独生3000/非独最多1500)</span></span><div class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">¥/月</span><input type="number" x-model.number="sc.sdElderly" @input="calcAll()" class="w-24 text-right bg-input border border-border rounded px-1 text-xs font-mono" placeholder="0"></div></div>
+      <div class="flex items-center justify-between"><span>大病医疗 <span class="text-xs text-text-placeholder font-mono">(年度,自付超15000,上限80000)</span></span><div class="flex items-center gap-2"><span class="text-xs text-text-placeholder font-mono">¥</span><input type="number" x-model.number="sc.sdMajorIllness" @input="calcAll()" class="w-24 text-right bg-input border border-border rounded px-1 text-xs font-mono" placeholder="0"></div></div>
+      <div class="text-[10px] text-text-muted pt-2 border-t border-border-light font-mono">房贷利息与住房租金互斥，二选一</div>
     </div>
   </div>
 </div>
@@ -352,66 +361,66 @@ tailwind.config = {
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-3">
-      <span class="w-1.5 h-4 bg-[#1D2939] rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">工资薪金累进税率表 (年度)</h3>
+      <span class="w-1.5 h-4 bg-accent-dark rounded-full"></span>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">工资薪金累进税率表 (年度)</h3>
     </div>
     <table class="data-table text-xs w-full">
       <thead><tr><th class="text-right">级数</th><th class="text-right">全年应纳税所得额</th><th class="text-right">税率</th><th class="text-right">速算扣除数</th><th></th></tr></thead>
       <tbody>
-        <tr :class="sc._annualLv===1?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">1</td><td class="text-right">≤ 36,000</td><td class="text-right">3%</td><td class="text-right">0</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===1">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===2?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">2</td><td class="text-right">36,000 ~ 144,000</td><td class="text-right">10%</td><td class="text-right">2,520</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===2">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===3?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">3</td><td class="text-right">144,000 ~ 300,000</td><td class="text-right">20%</td><td class="text-right">16,920</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===3">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===4?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">4</td><td class="text-right">300,000 ~ 420,000</td><td class="text-right">25%</td><td class="text-right">31,920</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===4">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===5?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">5</td><td class="text-right">420,000 ~ 660,000</td><td class="text-right">30%</td><td class="text-right">52,920</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===5">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===6?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">6</td><td class="text-right">660,000 ~ 960,000</td><td class="text-right">35%</td><td class="text-right">85,920</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===6">◀ 当前档位</td></tr>
-        <tr :class="sc._annualLv===7?'bg-[#00d2ff]/8 text-[#1D2939] font-bold':''"><td class="text-right">7</td><td class="text-right">&gt; 960,000</td><td class="text-right">45%</td><td class="text-right">181,920</td><td class="text-[#10B981] text-xs" x-show="sc._annualLv===7">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===1?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">1</td><td class="text-right">≤ 36,000</td><td class="text-right">3%</td><td class="text-right">0</td><td class="text-success text-xs" x-show="sc._annualLv===1">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===2?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">2</td><td class="text-right">36,000 ~ 144,000</td><td class="text-right">10%</td><td class="text-right">2,520</td><td class="text-success text-xs" x-show="sc._annualLv===2">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===3?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">3</td><td class="text-right">144,000 ~ 300,000</td><td class="text-right">20%</td><td class="text-right">16,920</td><td class="text-success text-xs" x-show="sc._annualLv===3">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===4?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">4</td><td class="text-right">300,000 ~ 420,000</td><td class="text-right">25%</td><td class="text-right">31,920</td><td class="text-success text-xs" x-show="sc._annualLv===4">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===5?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">5</td><td class="text-right">420,000 ~ 660,000</td><td class="text-right">30%</td><td class="text-right">52,920</td><td class="text-success text-xs" x-show="sc._annualLv===5">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===6?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">6</td><td class="text-right">660,000 ~ 960,000</td><td class="text-right">35%</td><td class="text-right">85,920</td><td class="text-success text-xs" x-show="sc._annualLv===6">◀ 当前档位</td></tr>
+        <tr :class="sc._annualLv===7?'bg-accent-soft text-text-primary font-bold':''"><td class="text-right">7</td><td class="text-right">&gt; 960,000</td><td class="text-right">45%</td><td class="text-right">181,920</td><td class="text-success text-xs" x-show="sc._annualLv===7">◀ 当前档位</td></tr>
       </tbody>
     </table>
   </div>
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-3">
-      <span class="w-1.5 h-4 bg-amber-500 rounded-full"></span>
-      <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">一次性奖金税率表 (月度)</h3>
+      <span class="w-1.5 h-4 bg-warning rounded-full"></span>
+      <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">一次性奖金税率表 (月度)</h3>
     </div>
     <table class="data-table text-xs w-full">
       <thead><tr><th class="text-right">级数</th><th class="text-right">月均奖金</th><th class="text-right">税率</th><th class="text-right">速算扣除数</th><th></th></tr></thead>
       <tbody>
-        <tr :class="sc._bonusLv===1?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">1</td><td class="text-right">≤ 3,000</td><td class="text-right">3%</td><td class="text-right">0</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===1">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===2?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">2</td><td class="text-right">3,000 ~ 12,000</td><td class="text-right">10%</td><td class="text-right">210</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===2">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===3?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">3</td><td class="text-right">12,000 ~ 25,000</td><td class="text-right">20%</td><td class="text-right">1,410</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===3">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===4?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">4</td><td class="text-right">25,000 ~ 35,000</td><td class="text-right">25%</td><td class="text-right">2,660</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===4">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===5?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">5</td><td class="text-right">35,000 ~ 55,000</td><td class="text-right">30%</td><td class="text-right">4,410</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===5">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===6?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">6</td><td class="text-right">55,000 ~ 80,000</td><td class="text-right">35%</td><td class="text-right">7,160</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===6">◀ 当前档位</td></tr>
-        <tr :class="sc._bonusLv===7?'bg-amber-50 text-[#1D2939] font-bold':''"><td class="text-right">7</td><td class="text-right">&gt; 80,000</td><td class="text-right">45%</td><td class="text-right">15,160</td><td class="text-[#10B981] text-xs" x-show="sc._bonusLv===7">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===1?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">1</td><td class="text-right">≤ 3,000</td><td class="text-right">3%</td><td class="text-right">0</td><td class="text-success text-xs" x-show="sc._bonusLv===1">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===2?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">2</td><td class="text-right">3,000 ~ 12,000</td><td class="text-right">10%</td><td class="text-right">210</td><td class="text-success text-xs" x-show="sc._bonusLv===2">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===3?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">3</td><td class="text-right">12,000 ~ 25,000</td><td class="text-right">20%</td><td class="text-right">1,410</td><td class="text-success text-xs" x-show="sc._bonusLv===3">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===4?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">4</td><td class="text-right">25,000 ~ 35,000</td><td class="text-right">25%</td><td class="text-right">2,660</td><td class="text-success text-xs" x-show="sc._bonusLv===4">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===5?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">5</td><td class="text-right">35,000 ~ 55,000</td><td class="text-right">30%</td><td class="text-right">4,410</td><td class="text-success text-xs" x-show="sc._bonusLv===5">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===6?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">6</td><td class="text-right">55,000 ~ 80,000</td><td class="text-right">35%</td><td class="text-right">7,160</td><td class="text-success text-xs" x-show="sc._bonusLv===6">◀ 当前档位</td></tr>
+        <tr :class="sc._bonusLv===7?'bg-warning-bg text-text-primary font-bold':''"><td class="text-right">7</td><td class="text-right">&gt; 80,000</td><td class="text-right">45%</td><td class="text-right">15,160</td><td class="text-success text-xs" x-show="sc._bonusLv===7">◀ 当前档位</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
 <!-- ROW 5: Notes -->
-<div class="card p-5 text-xs text-[#475467] leading-relaxed space-y-3 mb-8">
+<div class="card p-5 text-xs text-text-secondary leading-relaxed space-y-3 mb-8">
   <div class="flex items-center space-x-2 mb-3">
-    <span class="w-1.5 h-4 bg-[#667085] rounded-full"></span>
-    <h3 class="text-xs font-bold text-[#1D2939] uppercase tracking-wider font-mono">计税说明</h3>
+    <span class="w-1.5 h-4 bg-text-muted rounded-full"></span>
+    <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">计税说明</h3>
   </div>
-  <div><span class="font-semibold text-[#1D2939] font-mono text-[10px] uppercase">工资计税方式：</span>累计预扣法。当月个税 = (累计收入 - 5000×月数 - 累计五险一金 - 累计专项扣除) × 税率 - 速算扣除数 - 已缴个税。随着月份增加，累计所得可能跨入更高税率档，因此每月到手金额递减。</div>
-  <div><span class="font-semibold text-[#1D2939] font-mono text-[10px] uppercase">一次性奖金计税：</span>在 2027.12.31 前可选择单独计税。奖金 ÷ 12 → 查月度税率表 → 奖金 × 税率 - 速算扣除数。也可选择并入当年综合所得计税。</div>
-  <div><span class="font-semibold text-[#1D2939] font-mono text-[10px] uppercase">数据来源：</span>深圳 2025-2026 五险一金费率。
-    养老基数 <span x-text="sc.siLo.pension+'~'+sc.siHi.pension" class="font-mono text-[#1D2939]"></span>，
-    医疗/生育基数 <span x-text="sc.siLo.medical+'~'+sc.siHi.medical" class="font-mono text-[#1D2939]"></span>，
-    失业基数 <span x-text="sc.siLo.unemp+'~'+sc.siHi.unemp" class="font-mono text-[#1D2939]"></span>，
-    公积金基数 <span x-text="sc.siLo.hf+'~'+sc.siHi.hf" class="font-mono text-[#1D2939]"></span>，
-    比例 <span x-text="sc.hfPct+'%'" class="font-mono text-[#1D2939]"></span>。
+  <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">工资计税方式：</span>累计预扣法。当月个税 = (累计收入 - 5000×月数 - 累计五险一金 - 累计专项扣除) × 税率 - 速算扣除数 - 已缴个税。随着月份增加，累计所得可能跨入更高税率档，因此每月到手金额递减。</div>
+  <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">一次性奖金计税：</span>在 2027.12.31 前可选择单独计税。奖金 ÷ 12 → 查月度税率表 → 奖金 × 税率 - 速算扣除数。也可选择并入当年综合所得计税。</div>
+  <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">数据来源：</span>深圳 2025-2026 五险一金费率。
+    养老基数 <span x-text="sc.siLo.pension+'~'+sc.siHi.pension" class="font-mono text-text-primary"></span>，
+    医疗/生育基数 <span x-text="sc.siLo.medical+'~'+sc.siHi.medical" class="font-mono text-text-primary"></span>，
+    失业基数 <span x-text="sc.siLo.unemp+'~'+sc.siHi.unemp" class="font-mono text-text-primary"></span>，
+    公积金基数 <span x-text="sc.siLo.hf+'~'+sc.siHi.hf" class="font-mono text-text-primary"></span>，
+    比例 <span x-text="sc.hfPct+'%'" class="font-mono text-text-primary"></span>。
     仅供参考，以实际政策为准。</div>
 </div>
 
 <!-- FOOTER -->
-<footer class="text-center text-xs text-[#98A2B3] mb-8 no-print border-t border-[#D0D5DD] pt-6">
+<footer class="text-center text-xs text-text-placeholder mb-8 no-print border-t border-border pt-6">
   <div class="flex items-center justify-center space-x-2 font-mono">
-    <span class="font-tech text-[#1D2939] font-bold">AMM Lab</span>
-    <span class="text-[#D0D5DD]">/</span>
+    <span class="font-tech text-text-primary font-bold">AMM Lab</span>
+    <span class="text-text-placeholder">/</span>
     <span>Awesome Salary — 纯前端个税计算器</span>
-    <span class="text-[#D0D5DD]">/</span>
+    <span class="text-text-placeholder">/</span>
     <span>© 2026 AMM LABS INC.</span>
   </div>
 </footer>
