@@ -191,11 +191,11 @@ tailwind.config = {
         <input type="number" x-model.number="sc.salary" @input="calcAll()" class="form-input w-full mt-1" placeholder="25000">
       </div>
       <div>
-        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">社保缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">上半年社保缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
         <input type="number" x-model.number="sc.siBase" @input="calcAll()" class="form-input w-full mt-1" placeholder="同月薪">
       </div>
       <div>
-        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">公积金缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
+        <label class="text-[10px] font-mono text-text-muted font-bold uppercase">上半年公积金缴费基数 ¥ <span class="text-text-placeholder font-normal">留空=月薪</span></label>
         <input type="number" x-model.number="sc.hfBase" @input="calcAll()" class="form-input w-full mt-1" placeholder="同月薪">
       </div>
       <div class="flex gap-4 text-[10px] text-text-muted pt-2 border-t border-border-light font-mono">
@@ -256,8 +256,8 @@ tailwind.config = {
       <div class="flex justify-between"><span class="text-text-muted">奖金个税</span><span class="font-mono text-danger" x-text="'¥'+(sc.bonusTax||0).toLocaleString()"></span></div>
       <div class="flex justify-between"><span class="text-text-muted">奖金到手</span><span class="font-mono text-success" x-text="'¥'+(sc.bonusNet||0).toLocaleString()"></span></div>
       <div class="flex justify-between border-t border-border-light pt-2"><span class="text-text-muted">年度总收入</span><span class="font-mono text-text-primary font-bold" x-text="'¥'+(sc.sumTotalIncome||0).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-text-muted">五险一金 个人</span><span class="font-mono text-text-muted" x-text="'¥'+((_siPersMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)).total*12).toLocaleString()"></span></div>
-      <div class="flex justify-between"><span class="text-text-muted">五险一金 公司</span><span class="font-mono text-text-muted" x-text="'¥'+(_siCorpMonthly((sc.siBase||sc.salary)||0,(sc.hfBase||sc.salary)||0)*12).toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">五险一金 个人</span><span class="font-mono text-text-muted" x-text="'¥'+sc.sumPersSI.toLocaleString()"></span></div>
+      <div class="flex justify-between"><span class="text-text-muted">五险一金 公司</span><span class="font-mono text-text-muted" x-text="'¥'+sc.sumCorpSI.toLocaleString()"></span></div>
       <div class="flex justify-between"><span class="text-text-muted">专项附加扣除</span><span class="font-mono text-text-muted" x-text="'¥'+(sc.sumTotalSpecial||0).toLocaleString()"></span></div>
       <div class="flex justify-between"><span class="text-danger font-semibold">年度个税</span><span class="font-mono text-danger font-semibold" x-text="'¥'+(sc.sumTotalTax||0).toLocaleString()"></span></div>
       <div class="flex justify-between border-t border-accent-dark pt-2"><span class="text-success font-bold">年度税后到手</span><span class="font-mono text-success font-bold text-base" x-text="'¥'+(sc.sumTotalNet||0).toLocaleString()"></span></div>
@@ -306,38 +306,51 @@ tailwind.config = {
 <!-- ROW 3: SI Config + Special Deductions -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
 
+  <template x-for="half in [{id:1,label:'上半年五险一金 · 1–6 月',params:sc,note:'适用于 1–6 月。默认保留原参数，公积金上限 44,265 元。'},{id:2,label:'下半年五险一金 · 7–12 月',params:sc.secondHalf,note:'7 月自动切换。默认公积金上限 48,471 元；医保/生育基数全年不变。其他参数沿用待核验。'}]" :key="half.id">
   <!-- 五险一金参数 -->
-  <div class="card p-5">
+  <div class="card p-5 min-w-0">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center space-x-2">
         <span class="w-1.5 h-4 bg-accent-dark rounded-full"></span>
-        <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">五险一金参数</h3>
+        <h3 class="text-xs font-bold text-text-primary uppercase tracking-wider font-mono" x-text="half.label"></h3>
       </div>
-      <button @click="sc.siLocked=!sc.siLocked" class="btn btn-xs" :class="sc.siLocked?'btn-primary':'btn-secondary'" x-text="sc.siLocked?'🔒 已锁定':'🔓 已解锁'"></button>
+      <button @click="half.params.siLocked=!half.params.siLocked" class="btn btn-xs" :class="half.params.siLocked?'btn-primary':'btn-secondary'" x-text="half.params.siLocked?'🔒 已锁定':'🔓 已解锁'"></button>
     </div>
-    <div class="overflow-x-auto"><table class="data-table text-xs w-full">
+    <p class="text-xs text-text-muted mb-3" x-text="half.note"></p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+      <label class="text-xs text-text-muted">社保缴费基数 ¥
+        <input type="number" min="0" :aria-label="half.label+' 社保缴费基数'" x-model.number="half.params.siBase" @input="calcAll()" :disabled="half.params.siLocked" class="form-input w-full mt-1" :placeholder="half.id===1?'留空或0=月薪':'留空或0=沿用上半年'">
+      </label>
+      <label class="text-xs text-text-muted">公积金缴费基数 ¥
+        <input type="number" min="0" :aria-label="half.label+' 公积金缴费基数'" x-model.number="half.params.hfBase" @input="calcAll()" :disabled="half.params.siLocked" class="form-input w-full mt-1" :placeholder="half.id===1?'留空或0=月薪':'留空或0=沿用上半年'">
+      </label>
+    </div>
+    <div class="overflow-x-auto"><table class="data-table text-xs w-full whitespace-nowrap" style="min-width: 480px">
       <thead><tr><th class="text-right">险种</th><th class="text-right">基数下限</th><th class="text-right">基数上限</th><th class="text-right">单位%</th><th class="text-right">个人%</th></tr></thead>
       <tbody>
-        <template x-for="(lo,k) in sc.siLo" :key="k">
+        <template x-for="k in ['pension','medical','unemp','injury','maternity','hf']" :key="k">
           <tr>
             <td class="text-right font-bold text-text-primary" x-text="{pension:'养老保险',medical:'医疗保险',unemp:'失业保险',injury:'工伤保险',maternity:'生育保险',hf:'住房公积金'}[k]"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siLo[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siHi[k]" @input="calcAll()" :disabled="sc.siLocked||sc.siHi[k]=='-'" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siCorp[k]" @input="calcAll()" :disabled="sc.siLocked" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
-            <td class="text-right"><input type="number" x-model.number="sc.siPers[k]" @input="calcAll()" :disabled="sc.siLocked||(k==='injury'||k==='maternity')" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="sc.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" step="any" :aria-label="half.label+' '+k+' 基数下限'" x-model.number="half.params.siLo[k]" @input="calcAll()" :disabled="half.params.siLocked||half.params.siLo[k]==='-'" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="half.params.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" step="any" :aria-label="half.label+' '+k+' 基数上限'" x-model.number="half.params.siHi[k]" @input="calcAll()" :disabled="half.params.siLocked||half.params.siHi[k]=='-'" class="w-20 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="half.params.siLocked?'opacity-50':''"></td>
+            <td class="text-right"><input type="number" step="any" :aria-label="half.label+' '+k+' 单位比例'" x-show="k!=='hf'" x-model.number="half.params.siCorp[k]" @input="calcAll()" :disabled="half.params.siLocked||k==='hf'" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="half.params.siLocked?'opacity-50':''"><span x-show="k==='hf'" class="font-mono" x-text="half.params.hfPct"></span></td>
+            <td class="text-right"><input type="number" step="any" :aria-label="half.label+' '+k+' 个人比例'" x-show="k!=='hf'" x-model.number="half.params.siPers[k]" @input="calcAll()" :disabled="half.params.siLocked||(k==='injury'||k==='maternity'||k==='hf')" class="w-16 text-right bg-input border border-border rounded px-1 text-xs font-mono" :class="half.params.siLocked?'opacity-50':''"><span x-show="k==='hf'" class="font-mono" x-text="half.params.hfPct"></span></td>
           </tr>
         </template>
         <tr class="border-t-2 border-accent-steel">
           <td class="font-bold text-text-primary">公积金比例</td><td colspan="2"></td>
           <td colspan="2" class="text-right">
-            <input type="range" min="5" max="12" x-model.number="sc.hfPct" @input="calcAll()" :disabled="sc.siLocked" class="w-full accent-accent-steel" :class="sc.siLocked?'opacity-50':''">
-            <span class="font-mono font-bold text-text-primary" x-text="sc.hfPct+'%'"></span>
+            <input type="range" min="5" max="12" :aria-label="half.label+' 公积金比例'" x-model.number="half.params.hfPct" @input="calcAll()" :disabled="half.params.siLocked" class="w-full accent-accent-steel" :class="half.params.siLocked?'opacity-50':''">
+            <span class="font-mono font-bold text-text-primary" x-text="half.params.hfPct+'%'"></span>
           </td>
         </tr>
       </tbody>
     </table></div>
   </div>
 
+  </template>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
   <!-- 专项附加扣除 -->
   <div class="card p-5">
     <div class="flex items-center space-x-2 mb-4">
@@ -405,13 +418,15 @@ tailwind.config = {
   </div>
   <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">工资计税方式：</span>累计预扣法。当月个税 = (累计收入 - 5000×月数 - 累计五险一金 - 累计专项扣除) × 税率 - 速算扣除数 - 已缴个税。随着月份增加，累计所得可能跨入更高税率档，因此每月到手金额递减。</div>
   <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">一次性奖金计税：</span>在 2027.12.31 前可选择单独计税。奖金 ÷ 12 → 查月度税率表 → 奖金 × 税率 - 速算扣除数。也可选择并入当年综合所得计税。</div>
-  <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">数据来源：</span>深圳 2025-2026 五险一金费率。
-    养老基数 <span x-text="sc.siLo.pension+'~'+sc.siHi.pension" class="font-mono text-text-primary"></span>，
-    医疗/生育基数 <span x-text="sc.siLo.medical+'~'+sc.siHi.medical" class="font-mono text-text-primary"></span>，
-    失业基数 <span x-text="sc.siLo.unemp+'~'+sc.siHi.unemp" class="font-mono text-text-primary"></span>，
-    公积金基数 <span x-text="sc.siLo.hf+'~'+sc.siHi.hf" class="font-mono text-text-primary"></span>，
-    比例 <span x-text="sc.hfPct+'%'" class="font-mono text-text-primary"></span>。
-    仅供参考，以实际政策为准。</div>
+  <div><span class="font-semibold text-text-primary font-mono text-[10px] uppercase">默认参数与来源（2026 年）：</span>
+    1–6 月和 7–12 月分别取上、下半年面板配置，累计个税连续计算；年度汇总与 CSV 按十二个月累加。
+    下半年公积金基数 2,520–48,471 元，上限按 2025 年在岗职工年平均工资 193,881 元÷12 四舍五入后×3 推算，比例默认双方各 5%，可按单位实际值调整。
+    <a href="https://www.sz.gov.cn/hdjl/ywzsk/jsj/zfgjj/content/post_12893587.html" target="_blank" rel="noopener noreferrer" class="underline">公积金年度规则</a> ·
+    <a href="https://www.sz.gov.cn/cn/xxgk/zfxxgj/tjsj/tjgb/content/post_12907800.html" target="_blank" rel="noopener noreferrer" class="underline">统计局工资数据</a>。
+    医保默认一档，医保/生育基数 6,727–33,633 元适用 2026 全年（<a href="https://hsa.sz.gov.cn/szsylbzjwzgkml/szsylbzjwzgkml/qt/tzgg/content/post_12574511.html" target="_blank" rel="noopener noreferrer" class="underline">医保局通知</a>）。
+    养老、失业、工伤及生育单位费率沿用原配置，2026 下半年新标准待核验；工伤费率因行业及单位浮动而异，默认 0.14% 仅为原示例。默认养老单位 16% 不含深户地方补充养老。
+    本工具按半年固定参数估算，不自动处理期内政策调整或追溯补缴；请解锁面板按实际缴费通知校准。金额沿用原工具四舍五入至元的口径。
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -446,14 +461,22 @@ function salaryCalc() {
       siCorp: {pension:16,medical:6,unemp:0.8,injury:0.14,maternity:0.5},
       siPers: {pension:8,medical:2,unemp:0.2,injury:0,maternity:0},
       hfPct: 5,
+      secondHalf: {
+        siLocked: true, siBase: 0, hfBase: 0,
+        siLo: {pension:4775,medical:6727,unemp:2520,injury:'-',maternity:6727,hf:2520},
+        siHi: {pension:27549,medical:33633,unemp:44265,injury:'-',maternity:33633,hf:48471},
+        siCorp: {pension:16,medical:6,unemp:0.8,injury:0.14,maternity:0.5},
+        siPers: {pension:8,medical:2,unemp:0.2,injury:0,maternity:0},
+        hfPct: 5
+      },
       monthly: [], bonusTax: 0, bonusNet: 0,
+      sumPersSI: 0, sumCorpSI: 0,
       sumTotalIncome: 0, sumTotalSI: 0, sumTotalSpecial: 0,
       sumTotalTax: 0, sumTotalHF: 0, sumTotalNet: 0, sumGrandNet: 0
     },
 
-    _siPersMonthly(siBase, hfBase) {
+    _siPersMonthly(siBase, hfBase, s = this.sc) {
       if (!siBase || siBase <= 0) return {total:0,pension:0,medical:0,unemp:0,hf:0};
-      const s = this.sc;
       const c = (v, lo, hi) => {
         if (lo !== '-' && lo != null && v < lo) return lo;
         if (hi !== '-' && hi != null && v > hi) return hi;
@@ -470,9 +493,8 @@ function salaryCalc() {
       return {total: pension + medical + unemp + hf, pension, medical, unemp, hf};
     },
 
-    _siCorpMonthly(siBase, hfBase) {
+    _siCorpMonthly(siBase, hfBase, s = this.sc) {
       if (!siBase || siBase <= 0) return 0;
-      const s = this.sc;
       const c = (v, lo, hi) => {
         if (lo !== '-' && lo != null && v < lo) return lo;
         if (hi !== '-' && hi != null && v > hi) return hi;
@@ -495,7 +517,6 @@ function salaryCalc() {
     calcAll() {
       const s = this.sc;
       const salary = s.salary || 0, siBase = s.siBase || salary, hfBase = s.hfBase || salary;
-      const si = this._siPersMonthly(siBase, hfBase), siPers = si.total, siCorp = this._siCorpMonthly(siBase, hfBase);
 
       let specialM = (s.sdChildren || 0) * 2000 + (s.sdInfant || 0) * 2000 + (s.sdContinueEdu || 0);
       if (s.sdHousingLoan) specialM += 1000;
@@ -517,6 +538,11 @@ function salaryCalc() {
       let cumIn = 0, cumDe = 0, prevTax = 0;
       let totalExtraIn = 0, totalExtraDe = 0;
       for (let m = 1; m <= 12; m++) {
+        const policy = m <= 6 ? s : s.secondHalf;
+        const monthSIBase = m <= 6 ? siBase : (policy.siBase || siBase);
+        const monthHFBase = m <= 6 ? hfBase : (policy.hfBase || hfBase);
+        const si = this._siPersMonthly(monthSIBase, monthHFBase, policy);
+        const siPers = si.total, siCorp = this._siCorpMonthly(monthSIBase, monthHFBase, policy);
         let income = salary;
         if (m === s.bonusMonth1) income += s.bonusAmount1;
         if (m === s.bonusMonth2) income += s.bonusAmount2;
@@ -531,7 +557,7 @@ function salaryCalc() {
         let monthTax = cumTax - prevTax; prevTax = cumTax;
         let netPay = income - siPers - extraDe - monthTax;
         s.monthly.push({
-          month: m, income, siPers,
+          month: m, income, siPers, siCorp,
           siPension: si.pension, siMedical: si.medical, siUnemp: si.unemp, siHF: si.hf,
           extraIn, extraDe, specialM, deduct,
           cumTaxable: taxable, cumTax, monthTax,
@@ -555,13 +581,14 @@ function salaryCalc() {
         for (let i = 0; i < taxB.length; i++) { if (lastM.cumTaxable <= taxB[i][0]) { s._annualLv = i + 1; break; } }
       }
 
-      const corpHF = Math.round((hfBase > 0 ? Math.min(Math.max(hfBase, s.siLo.hf || 2520), s.siHi.hf || 42500) : 0) * s.hfPct / 100);
       s.sumTotalIncome = salary * 12 + s.bonusAmount1 + s.bonusAmount2 + totalExtraIn + s.bonusLumpSum;
-      s.sumTotalSI = (siPers + siCorp) * 12;
+      s.sumPersSI = s.monthly.reduce((a, m) => a + m.siPers, 0);
+      s.sumCorpSI = s.monthly.reduce((a, m) => a + m.siCorp, 0);
+      s.sumTotalSI = s.sumPersSI + s.sumCorpSI;
       s.sumTotalSpecial = specialM * 12 + s.sdMajorIllness;
       s.sumTotalTax = s.monthly.reduce((a, m) => a + m.monthTax, 0) + s.bonusTax;
-      s.sumTotalHF = (si.hf + corpHF) * 12;
-      s.sumTotalNet = s.sumTotalIncome - (siPers * 12) - totalExtraDe - s.sumTotalTax;
+      s.sumTotalHF = s.monthly.reduce((a, m) => a + m.siHF * 2, 0);
+      s.sumTotalNet = s.sumTotalIncome - s.sumPersSI - totalExtraDe - s.sumTotalTax;
       s.sumGrandNet = s.sumTotalNet + s.sumTotalHF;
     },
 
@@ -574,10 +601,6 @@ function salaryCalc() {
 
     exportSalaryCSV() {
       const s = this.sc;
-      const siBase = s.siBase || s.salary || 0, hfBase = s.hfBase || s.salary || 0;
-      const si = this._siPersMonthly(siBase, hfBase);
-      const siPers = si.total;
-      const siCorp = this._siCorpMonthly(siBase, hfBase);
       let rows = [['月份','工资收入','并入奖金','额外收入','养老','医疗','失业','公积金','额外扣除','专项扣除','累计应纳税所得额','累计个税','当月个税','到手']];
       for (const m of s.monthly) {
         rows.push([m.month, m.income,
@@ -586,7 +609,7 @@ function salaryCalc() {
           m.cumTaxable, m.cumTax, m.monthTax, m.net]);
       }
       rows.push([], ['一次性奖金','','','','','','','','', s.bonusTax, s.bonusNet]);
-      rows.push([], ['年度总收入', s.sumTotalIncome, '五险一金个人', siPers * 12, '五险一金公司', siCorp * 12, '公积金总收入', s.sumTotalHF, '年度个税', s.sumTotalTax, '年度税后到手', s.sumTotalNet, '年度总到手', s.sumGrandNet]);
+      rows.push([], ['年度总收入', s.sumTotalIncome, '五险一金个人', s.sumPersSI, '五险一金公司', s.sumCorpSI, '公积金总收入', s.sumTotalHF, '年度个税', s.sumTotalTax, '年度税后到手', s.sumTotalNet, '年度总到手', s.sumGrandNet]);
       const csv = '﻿' + rows.map(r => r.join(',')).join('\n');
       const b = new Blob([csv], {type:'text/csv;charset=utf-8'});
       const a = document.createElement('a');
