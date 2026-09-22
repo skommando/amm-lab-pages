@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<meta name="robots" content="noindex,follow">
+<script src="../locale/runtime.js"></script>
+<script src="../locale/tools.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>薪酬计算器 — Awesome Salary | AMM Lab</title>
@@ -610,7 +613,7 @@ function salaryCalc() {
       }
       rows.push([], ['一次性奖金','','','','','','','','', s.bonusTax, s.bonusNet]);
       rows.push([], ['年度总收入', s.sumTotalIncome, '五险一金个人', s.sumPersSI, '五险一金公司', s.sumCorpSI, '公积金总收入', s.sumTotalHF, '年度个税', s.sumTotalTax, '年度税后到手', s.sumTotalNet, '年度总到手', s.sumGrandNet]);
-      const csv = '﻿' + rows.map(r => r.join(',')).join('\n');
+      const csv = '﻿' + rows.map(r => r.map(value => typeof value === 'string' ? (globalThis.AMMLocale?.t(value) ?? value) : value).join(',')).join('\n');
       const b = new Blob([csv], {type:'text/csv;charset=utf-8'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(b);

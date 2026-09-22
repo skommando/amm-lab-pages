@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /embedded/
 Disallow: /drafts/
 Sitemap: https://www.amm907.com/sitemap.xml

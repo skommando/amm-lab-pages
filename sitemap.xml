@@ -7,14 +7,26 @@
   <url><loc>https://www.amm907.com/tools/mortgage/</loc></url>
   <url><loc>https://www.amm907.com/games/</loc></url>
   <url><loc>https://www.amm907.com/games/star-wing/</loc></url>
+  <url><loc>https://www.amm907.com/games/sky-city-defense/</loc></url>
+  <url><loc>https://www.amm907.com/games/sky-city-walk/</loc></url>
   <url><loc>https://www.amm907.com/games/Fruit_Sprout_3D/</loc></url>
   <url><loc>https://www.amm907.com/games/skyline-park/</loc></url>
   <url><loc>https://www.amm907.com/games/engineer3d/</loc></url>
   <url><loc>https://www.amm907.com/games/apex-air/</loc></url>
+  <url><loc>https://www.amm907.com/games/steel-breakout/</loc></url>
+  <url><loc>https://www.amm907.com/games/armored-defense/</loc></url>
+  <url><loc>https://www.amm907.com/games/bubble-expedition/</loc></url>
+  <url><loc>https://www.amm907.com/games/glimmer-survivor/</loc></url>
+  <url><loc>https://www.amm907.com/games/pocket-bastion/</loc></url>
+  <url><loc>https://www.amm907.com/games/nightfall-camp/</loc></url>
+  <url><loc>https://www.amm907.com/games/neon-stride/</loc></url>
+  <url><loc>https://www.amm907.com/games/jelly-foundry/</loc></url>
+  <url><loc>https://www.amm907.com/games/midnight-diner/</loc></url>
+  <url><loc>https://www.amm907.com/games/mechanism-isles/</loc></url>
   <url><loc>https://www.amm907.com/articles/</loc></url>
+  <url><loc>https://www.amm907.com/articles/iron-tide-devlog-direction/</loc></url>
   <url><loc>https://www.amm907.com/articles/weaponry-cheat-sheet-unname/</loc></url>
   <url><loc>https://www.amm907.com/articles/weaponry-cheat-sheet-msfvenom/</loc></url>
-  <url><loc>https://www.amm907.com/articles/weaponry-priv-esc-windows-priv-esc/</loc></url>
   <url><loc>https://www.amm907.com/articles/htb-htb-linux-swagshop-writeup/</loc></url>
   <url><loc>https://www.amm907.com/articles/htb-htb-linux-friendzone-writeup/</loc></url>
   <url><loc>https://www.amm907.com/articles/changelog/</loc></url>
@@ -38,4 +50,56 @@
   <url><loc>https://www.amm907.com/articles/oscp-in-the-beginning/</loc></url>
   <url><loc>https://www.amm907.com/articles/htb-htb-environment/</loc></url>
   <url><loc>https://www.amm907.com/articles/weaponry-kali-kali-deploy/</loc></url>
+  <url><loc>https://www.amm907.com/projects/iron-tide/</loc></url>
+  <url><loc>https://www.amm907.com/en/</loc></url>
+  <url><loc>https://www.amm907.com/en/tools/</loc></url>
+  <url><loc>https://www.amm907.com/en/tools/text-tools/</loc></url>
+  <url><loc>https://www.amm907.com/en/tools/salary/</loc></url>
+  <url><loc>https://www.amm907.com/en/tools/mortgage/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/star-wing/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/sky-city-defense/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/sky-city-walk/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/Fruit_Sprout_3D/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/skyline-park/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/engineer3d/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/apex-air/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/steel-breakout/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/armored-defense/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/bubble-expedition/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/glimmer-survivor/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/pocket-bastion/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/nightfall-camp/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/neon-stride/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/jelly-foundry/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/midnight-diner/</loc></url>
+  <url><loc>https://www.amm907.com/en/games/mechanism-isles/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/iron-tide-devlog-direction/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-cheat-sheet-unname/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-cheat-sheet-msfvenom/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-swagshop-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-friendzone-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/changelog/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-irked-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-valentine-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-prepration-learning-plan/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-prepration-resources/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-cheat-sheet-file-transfer/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-sense-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-cheat-sheet-reverse-shell/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-nibbles-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-kali-common-problems/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-beep-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-prepration-training-plan/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-note-version-compare/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-priv-esc-linux-priv-esc/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-bashed-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-shocker-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-note-nmap-tips/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-linux-lame-writeup/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/oscp-in-the-beginning/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/htb-htb-environment/</loc></url>
+  <url><loc>https://www.amm907.com/en/articles/weaponry-kali-kali-deploy/</loc></url>
+  <url><loc>https://www.amm907.com/en/projects/iron-tide/</loc></url>
 </urlset>

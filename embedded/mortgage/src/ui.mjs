@@ -52,8 +52,8 @@ $('show-all').addEventListener('click',()=>{all=!all;render();});
 $('export').addEventListener('click',()=>{
   if(!results)return;
   if(downloadUrl)URL.revokeObjectURL(downloadUrl);
-  downloadUrl=URL.createObjectURL(new Blob([scheduleCsv(results[method])],{type:'text/csv;charset=utf-8'}));
-  const a=document.createElement('a');a.href=downloadUrl;a.download=`房贷还款计划-${method==='annuity'?'等额本息':'等额本金'}.csv`;document.body.append(a);a.click();a.remove();
+  downloadUrl=URL.createObjectURL(new Blob([scheduleCsv(results[method],window.AMMLocale.get())],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=downloadUrl;a.download=window.AMMLocale.get()==='en'?`mortgage-schedule-${method}.csv`:`房贷还款计划-${method==='annuity'?'等额本息':'等额本金'}.csv`;document.body.append(a);a.click();a.remove();
   $('export-status').textContent='CSV 已生成；若浏览器未保存，请用页面顶部“独立打开”后重试。';
 });
 window.addEventListener('pagehide',()=>{if(downloadUrl)URL.revokeObjectURL(downloadUrl);});

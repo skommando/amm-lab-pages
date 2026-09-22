@@ -61,6 +61,7 @@ export function calculateMortgage(loans,method='annuity') {
   const totalInterest=rows.reduce((s,row)=>s+cents(row.interest),0)/100;
   return {method,rows,months,totalPrincipal,totalInterest,totalPayment:cents(totalPrincipal+totalInterest)/100,firstPayment:rows[0].payment,lastPayment:rows.at(-1).payment};
 }
-export function scheduleCsv(result) {
-  return '\uFEFF期数,月供（元）,本金（元）,利息（元）,剩余本金（元）\r\n'+result.rows.map(row=>[row.month,...['payment','principal','interest','balance'].map(key=>row[key].toFixed(2))].join(',')).join('\r\n');
+export function scheduleCsv(result,language='zh') {
+  const headings=language==='en'?'Payment,Payment (CNY),Principal (CNY),Interest (CNY),Remaining principal (CNY)':'期数,月供（元）,本金（元）,利息（元）,剩余本金（元）';
+  return '\uFEFF'+headings+'\r\n'+result.rows.map(row=>[row.month,...['payment','principal','interest','balance'].map(key=>row[key].toFixed(2))].join(',')).join('\r\n');
 }
