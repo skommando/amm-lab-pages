@@ -1005,5 +1005,19 @@ window.AMMLocale.register({
   "已接管塔吊": "Controlling Tower crane",
   "已接管预制桩锤击机": "Controlling Precast pile driver",
   "已接管折臂高空作业车": "Controlling Articulating boom lift",
-  "已接管汽车起重机": "Controlling Mobile crane"
+  "已接管汽车起重机": "Controlling Mobile crane",
+  "道路清扫车": "Road sweeper",
+  "道路洒水车": "Road sprinkler",
+  "道路垃圾车": "Road refuse truck",
+  "绘本款 · SWEEP": "STORYBOOK · SWEEP",
+  "绘本款 · WATER": "STORYBOOK · WATER",
+  "绘本款 · REFUSE": "STORYBOOK · REFUSE",
+  "选择车辆": "Select vehicle",
+  "车辆作业控制": "Vehicle controls",
+  "触屏驾驶": "Touch driving",
+  "新班次已开始 · 七辆环卫车已回到出车位": "New shift started · All seven vehicles returned to their bays",
+  "默认作业曲为《樱花草》；所有车辆共用播放进度。": "The default track is \"Primrose\". All vehicles share the same playback position.",
+  "道路清扫车已接管 · 按空格启动": "Road sweeper selected · Press Space to start ",
+  "道路洒水车已接管 · 按空格启动": "Road sprinkler selected · Press Space to start ",
+  "道路垃圾车已接管 · 按空格启动": "Road refuse truck selected · Press Space to start "
 });
