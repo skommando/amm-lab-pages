@@ -37,38 +37,42 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
   let sequence=0;const makeId=prefix=>prefix+Date.now().toString(36)+(++sequence).toString(36);
   const text=(v,max)=>typeof v==='string'&&v.length<=max;
   const validId=v=>typeof v==='string'&&/^[A-Za-z0-9._-]{1,80}$/.test(v);
+  function cellState(value){if(typeof value==='string')return 'room';if(value===null)return 'unconfigured';if(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===1&&value.state==='none')return 'none';throw Error('分舱格状态无效');}
   function createDefault(){
-    const rooms=[['bow','generic','艏舱'],['forward-magazine','magazine','前弹药舱'],['auxiliary','auxiliary','辅助舱'],['engine','engine','动力舱 E1'],['aft-magazine','magazine','后弹药舱'],['steering','steering','舵机舱'],['passage','generic','通道 / 通用舱'],['superstructure','generic','上层结构']].map(([id,type,name])=>({id,type,name,note:''}));
+    const rooms=[['bow','generic','艏舱'],['forward-magazine','magazine','前弹药舱'],['auxiliary','auxiliary','辅助舱'],['engine','engine','动力舱 E1'],['aft-magazine','magazine','后弹药舱'],['steering','steering','舵机舱']].map(([id,type,name])=>({id,type,name,note:''}));
     const row=['bow','forward-magazine','auxiliary','engine','aft-magazine','steering'];
-    return {version:1,stations:[0,.16,.32,.44,.68,.84,1],layers:[{id:'bottom',name:'底舱层',bottom:-6,top:-2},{id:'lower',name:'下甲板层',bottom:-2,top:2},{id:'deck',name:'主甲板层',bottom:2,top:6},{id:'upper',name:'上层结构',bottom:6,top:12}],rooms,cells:[[...row],[...row],Array(6).fill('passage'),[null,null,'superstructure','superstructure',null,null]]};
+    return {version:2,mainDeckLayerId:'deck',stations:[0,.16,.32,.44,.68,.84,1],layers:[{id:'bottom',name:'底舱层',bottom:-6,top:-2},{id:'lower',name:'下甲板层',bottom:-2,top:2},{id:'deck',name:'甲板室层',bottom:2,top:6},{id:'upper',name:'上层建筑层',bottom:6,top:12}],rooms,cells:[[...row],[...row],Array(6).fill(null),Array(6).fill(null)]};
   }
   function validate(d){
-    if(!d||d.version!==1||!Array.isArray(d.stations)||d.stations.length<2||d.stations.length>65||d.stations[0]!==0||d.stations.at(-1)!==1)throw Error('分舱比例轴必须覆盖0–100%，且不超过64段');
+    if(!d||![1,2].includes(d.version))throw Error('不支持的分舱版本');
+    if(!Array.isArray(d.stations)||d.stations.length<2||d.stations.length>65||d.stations[0]!==0||d.stations.at(-1)!==1)throw Error('分舱比例轴必须覆盖0–100%，且不超过64段');
     for(let i=0;i<d.stations.length;i++)if(!finite(d.stations[i])||i&&d.stations[i]-d.stations[i-1]<.005-1e-9)throw Error('分舱界线顺序或间距无效');
     if(!Array.isArray(d.layers)||d.layers.length<1||d.layers.length>12)throw Error('高度层数量须为1–12');
     const layerIds=new Set();d.layers.forEach((l,i)=>{if(!l||!validId(l.id)||layerIds.has(l.id)||!text(l.name,120)||!l.name.trim())throw Error('高度层标识或名称无效');layerIds.add(l.id);if(!finite(l.bottom)||!finite(l.top)||Math.abs(l.bottom)>10000||Math.abs(l.top)>10000||l.top-l.bottom<.1-1e-9)throw Error('高度层厚度至少0.1米，高度须为有限值');if(i&&l.bottom<d.layers[i-1].top-1e-9)throw Error('高度层不能交叠，须按高度排序');});
+    if(d.mainDeckLayerId!==undefined&&(d.version!==2||typeof d.mainDeckLayerId!=='string'||!layerIds.has(d.mainDeckLayerId)))throw Error('主甲板层引用无效');
     if(!Array.isArray(d.rooms)||d.rooms.length>768)throw Error('舱室记录过多或格式无效');
     const roomIds=new Set();for(const r of d.rooms){if(!r||!validId(r.id)||roomIds.has(r.id)||!Object.hasOwn(types,r.type)||!text(r.name,120)||!r.name.trim()||!text(r.note,2000))throw Error('舱室标识、类型或文字无效');roomIds.add(r.id);}
-    if(!Array.isArray(d.cells)||d.cells.length!==d.layers.length)throw Error('分舱矩阵高度不一致');for(const row of d.cells){if(!Array.isArray(row)||row.length!==d.stations.length-1)throw Error('分舱矩阵舰长不一致');for(const id of row)if(id!==null&&!roomIds.has(id))throw Error('分舱引用不存在');}
+    if(!Array.isArray(d.cells)||d.cells.length!==d.layers.length)throw Error('分舱矩阵高度不一致');for(const row of d.cells){if(!Array.isArray(row)||row.length!==d.stations.length-1)throw Error('分舱矩阵舰长不一致');for(const id of row){const state=cellState(id);if(state==='none'&&d.version!==2)throw Error('旧版分舱不支持无舱室状态');if(state==='room'&&!roomIds.has(id))throw Error('分舱引用不存在');}}
     return d;
   }
-  function change(d,edit){const n=copy(validate(d));edit(n);const used=new Set(n.cells.flat());n.rooms=n.rooms.filter(r=>used.has(r.id));return validate(n);}
+  function change(d,edit){const n=copy(validate(d));edit(n);const used=new Set(n.cells.flat().filter(c=>typeof c==='string'));n.rooms=n.rooms.filter(r=>used.has(r.id));return validate(n);}
   function layerIndex(d,id){const i=d.layers.findIndex(l=>l.id===id);if(i<0)throw Error('高度层不存在');return i;}
   function cellIndex(d,layerId,segment){const i=layerIndex(d,layerId);if(!Number.isInteger(segment)||segment<0||segment>=d.stations.length-1)throw Error('舱段不存在');return i;}
   function moveStation(d,index,value){return change(d,n=>{if(!Number.isInteger(index)||index<1||index>=n.stations.length-1||!finite(value))throw Error('首尾界线固定，内部界线须为有限比例');n.stations[index]=Math.max(n.stations[index-1]+.005,Math.min(n.stations[index+1]-.005,value));});}
-  function splitSegment(d,index){return change(d,n=>{cellIndex(n,n.layers[0].id,index);if(n.stations.length>=65||n.stations[index+1]-n.stations[index]<.01-1e-9)throw Error('此段过短或已达到64段');n.stations.splice(index+1,0,(n.stations[index]+n.stations[index+1])/2);for(const row of n.cells)row.splice(index+1,0,row[index]);});}
+  function splitSegment(d,index){return change(d,n=>{cellIndex(n,n.layers[0].id,index);if(n.stations.length>=65||n.stations[index+1]-n.stations[index]<.01-1e-9)throw Error('此段过短或已达到64段');n.stations.splice(index+1,0,(n.stations[index]+n.stations[index+1])/2);for(const row of n.cells)row.splice(index+1,0,copy(row[index]));});}
   function removeStation(d,index){return change(d,n=>{if(!Number.isInteger(index)||index<1||index>=n.stations.length-1)throw Error('首尾界线不能删除');n.stations.splice(index,1);for(const row of n.cells)row.splice(index,1);});}
   function setLayer(d,id,patch){return change(d,n=>{const i=layerIndex(n,id);for(const key of ['name','bottom','top'])if(patch[key]!==undefined)n.layers[i][key]=patch[key];const sorted=n.layers.map((layer,index)=>({layer,row:n.cells[index]})).sort((a,b)=>a.layer.bottom-b.layer.bottom);n.layers=sorted.map(p=>p.layer);n.cells=sorted.map(p=>p.row);});}
   function moveHeightEdge(d,id,edge,value){return change(d,n=>{if(!finite(value)||!['bottom','top'].includes(edge))throw Error('高度界线无效');const i=layerIndex(n,id),l=n.layers[i],other=n.layers[i+(edge==='top'?1:-1)],shared=other&&Math.abs(l[edge]-other[edge==='top'?'bottom':'top'])<1e-8;
     const min=edge==='top'?l.bottom+.1:other?(shared?other.bottom+.1:other.top):-10000,max=edge==='bottom'?l.top-.1:other?(shared?other.top-.1:other.bottom):10000,v=Math.max(min,Math.min(max,value));l[edge]=v;if(shared)other[edge==='top'?'bottom':'top']=v;});}
   function addLayer(d,name='新高度层'){return change(d,n=>{const bottom=n.layers.at(-1).top;n.layers.push({id:makeId('layer-'),name,bottom,top:bottom+4});n.cells.push(Array(n.stations.length-1).fill(null));});}
-  function removeLayer(d,id){return change(d,n=>{if(n.layers.length<=1)throw Error('至少保留一个高度层');const i=layerIndex(n,id);n.layers.splice(i,1);n.cells.splice(i,1);});}
+  function removeLayer(d,id){return change(d,n=>{if(n.layers.length<=1)throw Error('至少保留一个高度层');const i=layerIndex(n,id);n.layers.splice(i,1);n.cells.splice(i,1);if(n.mainDeckLayerId===id)delete n.mainDeckLayerId;});}
   function defineCell(d,layerId,segment,type='generic',name=''){return change(d,n=>{const i=cellIndex(n,layerId,segment);if(!Object.hasOwn(types,type))throw Error('舱室类型无效');const id=makeId('room-');n.rooms.push({id,type,name:name||types[type][0],note:''});n.cells[i][segment]=id;});}
   function updateRoom(d,id,patch){return change(d,n=>{const r=n.rooms.find(r=>r.id===id);if(!r)throw Error('舱室不存在');for(const key of ['type','name','note'])if(patch[key]!==undefined)r[key]=patch[key];});}
-  function clearCell(d,layerId,segment){return change(d,n=>{n.cells[cellIndex(n,layerId,segment)][segment]=null;});}
-  function mergeCell(d,layerId,segment,direction){return change(d,n=>{const i=cellIndex(n,layerId,segment),j=direction==='below'?i-1:i,k=direction==='before'?segment-1:segment;if(!['below','before'].includes(direction)||j<0||k<0||!n.cells[j][k])throw Error('相邻位置没有可并入的舱室');n.cells[i][segment]=n.cells[j][k];});}
+  function setCellState(d,layerId,segment,state){return change(d,n=>{if(!['none','unconfigured'].includes(state))throw Error('分舱格状态无效');const i=cellIndex(n,layerId,segment);n.cells[i][segment]=state==='none'?{state:'none'}:null;if(state==='none')n.version=2;});}
+  function clearCell(d,layerId,segment){return setCellState(d,layerId,segment,'unconfigured');}
+  function mergeCell(d,layerId,segment,direction){return change(d,n=>{const i=cellIndex(n,layerId,segment),j=direction==='below'?i-1:i,k=direction==='before'?segment-1:segment;if(!['below','before'].includes(direction)||j<0||k<0||cellState(n.cells[j][k])!=='room')throw Error('相邻位置没有可并入的舱室');n.cells[i][segment]=n.cells[j][k];});}
   function roomRanges(d,id){const ranges=[];d.layers.forEach((l,i)=>{for(let s=0;s<d.cells[i].length;s++){if(d.cells[i][s]!==id)continue;const start=s;while(s+1<d.cells[i].length&&d.cells[i][s+1]===id)s++;ranges.push({layerId:l.id,layerName:l.name,start:d.stations[start],end:d.stations[s+1],bottom:l.bottom,top:l.top});}});return ranges;}
-  return {types,createDefault,validate,moveStation,splitSegment,removeStation,setLayer,moveHeightEdge,addLayer,removeLayer,defineCell,updateRoom,clearCell,mergeCell,roomRanges};
+  return {types,cellState,createDefault,validate,moveStation,splitSegment,removeStation,setLayer,moveHeightEdge,addLayer,removeLayer,defineCell,updateRoom,setCellState,clearCell,mergeCell,roomRanges};
 });
 </script><script>/* 舰船布局文档、几何与导出核心；浏览器和 Node 共用。 */
 (function (root, factory) { const api=factory(root.ShipCompartments||(typeof require==='function'?require('./compartment-model.js'):null)); if (typeof module==='object' && module.exports) module.exports=api; else root.ShipModel=api; })(globalThis, function (Compartments) {
@@ -267,9 +271,10 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
     const rect=(x,y,w,h,fill,stroke='none',extra='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${stroke}" ${extra}/>`;
     const line=(x1,y1,x2,y2,color='#537182',extra='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" ${extra}/>`;
     const panel=(x,y,w,h,title)=>{shapes.push(`<rect class="comp-panel" x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#142735" stroke="#3b586a"/>`);boundsRect(x,y,w,h);label(x+14,y+25,title,16,'#b7d5e2');};
-    const room=id=>d.rooms.find(r=>r.id===id),color=id=>room(id)?C.types[room(id).type][1]:'#607b8b';
-    const cell=(x,y,w,h,layerId,s,id,opacity='.25')=>{const r=room(id),active=!!id&&id===selectedId||!id&&layerId===layer.id&&s===segment;return `<g data-comp-action="cell" data-comp-hull="${esc(q.id)}" data-comp-layer="${esc(layerId)}" data-comp-segment="${s}"><title>${esc(r?r.name:t('未定义舱室'))} · ${Math.round(d.stations[s]*1000)/10}–${Math.round(d.stations[s+1]*1000)/10}%</title>${rect(x,y,w,h,r?color(id):`url(#${hatch})`,active?'#b5ffe7':'#405e70',`data-comp-empty="${!r}" fill-opacity="${active?'.5':opacity}" stroke-width="${active?2:.7}"`)}</g>`;};
-    const cellLabel=(x,y,w,h,id,max=14)=>{if(h<22||w<42)return;label(x+w/2,y+h/2+4,short(room(id)?.name||t('未定义'),Math.min(max,Math.floor(w/10))),12,room(id)?'#dce9f0':'#8199a7','middle',true);};
+    const room=id=>typeof id==='string'?d.rooms.find(r=>r.id===id):undefined,color=id=>room(id)?C.types[room(id).type][1]:'#607b8b';
+    const stateName=id=>C.cellState(id)==='none'?'无舱室':'尚未配置';
+    const cell=(x,y,w,h,layerId,s,id,opacity='.25')=>{const r=room(id),kind=C.cellState(id),active=kind==='room'&&C.cellState(selectedId)==='room'?id===selectedId:layerId===layer.id&&s===segment;return `<g data-comp-action="cell" data-comp-hull="${esc(q.id)}" data-comp-layer="${esc(layerId)}" data-comp-segment="${s}"><title>${esc(r?r.name:t(stateName(id)))} · ${Math.round(d.stations[s]*1000)/10}–${Math.round(d.stations[s+1]*1000)/10}%</title>${rect(x,y,w,h,r?color(id):kind==='none'?'#0c1b25':`url(#${hatch})`,active?'#b5ffe7':'#405e70',`data-comp-state="${kind}" data-comp-empty="${!r}" fill-opacity="${active?'.5':kind==='none'?'.3':opacity}" stroke-width="${active?2:.7}" ${kind==='none'?'stroke-dasharray="4 4"':''}`)}</g>`;};
+    const cellLabel=(x,y,w,h,id,max=14)=>{if(h<22||w<42)return;label(x+w/2,y+h/2+4,short(room(id)?.name||t(stateName(id)),Math.min(max,Math.floor(w/10))),12,room(id)?'#dce9f0':'#8199a7','middle',true);};
     const defs=`<defs><pattern id="${hatch}" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0" stroke="#7c93a0" stroke-width="1"/></pattern><clipPath id="${clipId}"><path d="${M.pathData(q)}"/></clipPath><clipPath id="${bandClip}">${g.width>.001?`<path d="${M.pathData(q)}" transform="translate(${g.bandX+g.bandWidth/2} 0) scale(${g.bandWidth/g.width} 1) translate(${-(g.minX+g.maxX)/2} 0)"/>`:rect(g.bandX,g.minY,g.bandWidth,g.length,'white')}</clipPath></defs>`;
     if(mode==='plan'||mode==='combined'){
       let overlay='';for(let s=0;s<d.stations.length-1;s++){const y=g.minY+d.stations[s]*g.length,h=(d.stations[s+1]-d.stations[s])*g.length;overlay+=cell(g.minX-1,y,g.width+2,h,layer.id,s,d.cells[li][s],'.16');}
@@ -277,24 +282,26 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
       boundsRect(g.bandX-20,g.minY-65,g.bandWidth+115,g.length+110);label(g.bandX+g.bandWidth/2,g.minY-43,'平面分舱带',15,'#b7d5e2','middle');label(g.bandX+g.bandWidth/2,g.minY-21,short(layer.name,14),12,'#9db6c5','middle',true);
       shapes.push(`<g clip-path="url(#${bandClip})">`);for(let s=0;s<d.stations.length-1;s++){const y=g.minY+d.stations[s]*g.length,h=(d.stations[s+1]-d.stations[s])*g.length;shapes.push(cell(g.bandX,y,g.bandWidth,h,layer.id,s,d.cells[li][s]));cellLabel(g.bandX,y,g.bandWidth,h,d.cells[li][s]);}shapes.push('</g>');
       shapes.push(`<line data-comp-length="band" x1="${g.bandX-9}" y1="${g.minY}" x2="${g.bandX-9}" y2="${g.maxY}" stroke="#6da6bb"/>`);
-      d.stations.forEach((u,i)=>{const y=g.minY+u*g.length;label(g.bandX+g.bandWidth+13,y+4,(Math.round(u*1000)/10)+'%',11,'#92afbe','start',true);if(i>0&&i<d.stations.length-1&&canEdit)shapes.push(`<g data-comp-action="station" data-comp-hull="${esc(q.id)}" data-comp-index="${i}"><title>${esc(t('拖动分舱界线'))}</title>${line(g.bandX-5,y,g.bandX+g.bandWidth+5,y,'#8fd8c5','stroke-width="7" stroke-opacity=".18"')}<circle cx="${g.bandX+g.bandWidth}" cy="${y}" r="5" fill="#6ed6bd" stroke="#10232e"/></g>`);});
+      let lastBandLabel=-Infinity;d.stations.forEach((u,i)=>{const y=g.minY+u*g.length;if(i===d.stations.length-1||y-lastBandLabel>=18&&g.maxY-y>=18){label(g.bandX+g.bandWidth+13,y+4,(Math.round(u*1000)/10)+'%',11,'#92afbe','start',true);lastBandLabel=y;}if(i>0&&i<d.stations.length-1&&canEdit)shapes.push(`<g data-comp-action="station" data-comp-hull="${esc(q.id)}" data-comp-index="${i}"><title>${esc(t('拖动分舱界线'))} · ${Math.round(u*10000)/100}%</title>${line(g.bandX-5,y,g.bandX+g.bandWidth+5,y,'#8fd8c5','stroke-width="7" stroke-opacity=".18"')}<circle cx="${g.bandX+g.bandWidth}" cy="${y}" r="5" fill="#6ed6bd" stroke="#10232e"/></g>`);});
       label(g.bandX,g.maxY+30,'与船体等长 · 同步缩放',11,'#92afbe');
     }
     if(mode==='height'||mode==='combined'){
-      const x=g.sectionX,y=g.sectionY,w=g.sectionWidth,h=g.sectionHeight,zY=z=>y+(g.zMax-z)*g.zScale;
+      const x=g.sectionX,y=g.sectionY,w=g.sectionWidth,h=g.sectionHeight,zY=z=>y+(g.zMax-z)*g.zScale,deck=d.layers.find(l=>l.id===d.mainDeckLayerId);
+      const deckLine=(xx,yy,ww)=>{if(!deck)return;const dy=yy+(g.zMax-deck.bottom)*g.zScale;shapes.push(line(xx,dy,xx+ww,dy,'#e7ca77','data-comp-main-deck="true" stroke-width="2" pointer-events="none"'));label(xx+ww+12,dy-5,t('主甲板面')+' '+deck.bottom+'m',11,'#e7ca77','start',true);};
       panel(x-125,y-80,w+190,h+158,'高度分层 · 舰长展开');
       shapes.push(`<line data-comp-length="section" x1="${x}" y1="${y-19}" x2="${x+w}" y2="${y-19}" stroke="#6da6bb"/>`);
-      d.stations.forEach(u=>{const xx=x+u*w;shapes.push(line(xx,y-24,xx,y-14));label(xx,y-32,(Math.round(u*1000)/10)+'%',10,'#92afbe','middle',true);});
+      let lastStationLabel=-Infinity;d.stations.forEach((u,i)=>{const xx=x+u*w;shapes.push(line(xx,y-24,xx,y-14));if(i===d.stations.length-1||xx-lastStationLabel>=40&&x+w-xx>=40){label(xx,y-32,(Math.round(u*1000)/10)+'%',10,'#92afbe','middle',true);lastStationLabel=xx;}});
       d.layers.forEach((l,i)=>{const yy=zY(l.top),hh=(l.top-l.bottom)*g.zScale;label(x-12,yy+hh/2+4,short(l.name,10),12,'#a9beca','end',true);for(let s=0;s<d.stations.length-1;s++){const xx=x+d.stations[s]*w,ww=(d.stations[s+1]-d.stations[s])*w;shapes.push(cell(xx,yy,ww,hh,l.id,s,d.cells[i][s]));cellLabel(xx,yy,ww,hh,d.cells[i][s]);}
-        label(x+w+12,yy+4,l.top+'m',10,'#92afbe','start',true);
-        if(i&&l.bottom>d.layers[i-1].top){const gy=zY(l.bottom),gh=(l.bottom-d.layers[i-1].top)*g.zScale;shapes.push(rect(x,gy,w,gh,`url(#${hatch})`,'none','data-comp-gap="true" opacity=".25"'));if(gh>20)label(x+w/2,gy+gh/2+4,'未定义高度间隔',11,'#8aa4b3','middle');}
+        if(!deck||Math.abs(l.top-deck.bottom)>1e-8)label(x+w+12,yy+4,l.top+'m',10,'#92afbe','start',true);
+        if(i&&l.bottom>d.layers[i-1].top){const gy=zY(l.bottom),gh=(l.bottom-d.layers[i-1].top)*g.zScale;shapes.push(rect(x,gy,w,gh,`url(#${hatch})`,'none','data-comp-gap="true" opacity=".25"'));if(gh>20)label(x+w/2,gy+gh/2+4,'尚未配置高度间隔',11,'#8aa4b3','middle');}
         if(canEdit)for(const edge of ['bottom','top']){if(edge==='bottom'&&i>0&&Math.abs(d.layers[i-1].top-l.bottom)<1e-8)continue;const hy=zY(l[edge]);shapes.push(`<g data-comp-action="height" data-comp-hull="${esc(q.id)}" data-comp-layer="${esc(l.id)}" data-comp-edge="${edge}"><title>${esc(t('拖动高度界线'))}</title>${line(x,hy,x+w,hy,'#6ed6bd','stroke-width="7" stroke-opacity=".14"')}<rect x="${x+w-4}" y="${hy-4}" width="8" height="8" fill="#6ed6bd"/></g>`);}
       });
       if(g.zMin<=0&&g.zMax>=0){const water=zY(0);shapes.push(line(x-8,water,x+w+8,water,'#68badd','stroke-dasharray="8 6" pointer-events="none"'));label(x+w+12,water-5,'水线 0m',11,'#8bd4ef');}
-      label(x-105,y+h+35,'斜线：未定义舱室 / 高度间隔',12,'#91adbd');label(x-105,y+h+57,'同色同编号可跨层，图纸不模拟水密连通。',11,'#91adbd');
+      deckLine(x,y,w);label(x-105,y+h+35,'斜线：尚未配置 / 高度间隔 · 虚线：无舱室',12,'#91adbd');label(x-105,y+h+57,'同色同编号可跨层，图纸不模拟水密连通。',11,'#91adbd');
       const cx=g.crossX,cy=g.crossY,cw=g.crossWidth;panel(cx-125,cy-55,cw+190,h+114,'选段层级示意 · 非真实横剖');label(cx-105,cy-12,`${Math.round(d.stations[segment]*1000)/10}–${Math.round(d.stations[segment+1]*1000)/10}%`,12,'#6ed6bd','start',true);
       d.layers.forEach((l,i)=>{const yy=cy+(g.zMax-l.top)*g.zScale,hh=(l.top-l.bottom)*g.zScale;shapes.push(cell(cx,yy,cw,hh,l.id,segment,d.cells[i][segment]));cellLabel(cx,yy,cw,hh,d.cells[i][segment],22);label(cx-12,yy+hh/2+4,short(l.name,10),11,'#a9beca','end',true);if(i&&l.bottom>d.layers[i-1].top){const gy=cy+(g.zMax-l.bottom)*g.zScale,gh=(l.bottom-d.layers[i-1].top)*g.zScale;shapes.push(rect(cx,gy,cw,gh,`url(#${hatch})`,'none','data-comp-gap="true" opacity=".25"'));}});
       if(g.zMin<=0&&g.zMax>=0){const yy=cy+g.zMax*g.zScale;shapes.push(line(cx-8,yy,cx+cw+8,yy,'#68badd','stroke-dasharray="8 6" pointer-events="none"'));}
+      deckLine(cx,cy,cw);
       label(cx-105,cy+h+33,'宽度仅用于展示层级，不推导实际壳体。',11,'#91adbd');
     }
     if(!extents.length)return empty;
@@ -302,15 +309,30 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
     return {svg:`${defs}<g class="comp-diagrams" transform="${tr}">${shapes.join('')}</g><g class="comp-labels" pointer-events="none">${labels.join('')}</g>`,itemOverlays:overlays,bounds,renderItems:mode!=='height',hullId:q.id,layerId:layer.id,segment,geometry:g};
   }
   function exportSvg(doc,options={}){const s=scene(doc,{...options,edit:false});return M.exportSvg(doc,{...options,legend:s.renderItems,reference:s.renderItems&&options.reference,extentReference:s.renderItems&&options.extentReference,renderItems:s.renderItems,itemOverlays:s.itemOverlays,extraSvg:s.svg,extraBounds:s.bounds});}
-  function reference(doc){M.validate(doc);return {format:'ship-layout-compartment-reference',version:1,shipName:doc.name,lengthConvention:'舰长比例绑定船体局部曲线Y范围，包含贝塞尔极值；图纸位置不等于实际米制定位。',heightConvention:'高度为示意米数，水线基准0；负高度仅作设计参考。',usage:'布局参考，不自动生成引擎伤害、浮力、连通或水下命中配置。null表示未定义。舱室标识仅在所属船体内唯一，使用hullId与roomId联合引用。',hulls:hulls(doc).filter(q=>q.compartmentLayout).map(q=>{const d=q.compartmentLayout;return {hullId:q.id,hullName:q.name,visible:q.visible,localBounds:M.hullLocalBounds(q),transform:{x:q.x,y:q.y,rotation:q.rotation,scaleX:q.scaleX??1,scaleY:q.scaleY??1},stations:[...d.stations],layers:M.copy(d.layers),cells:M.copy(d.cells),rooms:d.rooms.map(r=>({...r,hullId:q.id,ranges:C.roomRanges(d,r.id)}))};})};}
+  function reference(doc){M.validate(doc);return {format:'ship-layout-compartment-reference',version:2,shipName:doc.name,lengthConvention:'舰长比例绑定船体局部曲线Y范围，包含贝塞尔极值；预设按建筑初始化舰长覆盖范围，后续编辑相互独立；不表示二维占地或真实横剖。',heightConvention:'高度为示意米数，水线基准0；负高度仅作设计参考。主甲板面取指定甲板室层的底高。',usage:'布局参考，不自动生成引擎伤害、浮力、连通或水下命中配置。null表示尚未配置，{state:"none"}表示确定没有舱室，字符串为roomId。舱室标识仅在所属船体内唯一，使用hullId与roomId联合引用。',hulls:hulls(doc).filter(q=>q.compartmentLayout).map(q=>{const d=q.compartmentLayout;return {hullId:q.id,hullName:q.name,visible:q.visible,layoutVersion:d.version,mainDeckLayerId:d.mainDeckLayerId??null,mainDeckHeight:d.layers.find(l=>l.id===d.mainDeckLayerId)?.bottom??null,localBounds:M.hullLocalBounds(q),transform:{x:q.x,y:q.y,rotation:q.rotation,scaleX:q.scaleX??1,scaleY:q.scaleY??1},stations:[...d.stations],layers:M.copy(d.layers),cells:M.copy(d.cells),rooms:d.rooms.map(r=>({...r,hullId:q.id,ranges:C.roomRanges(d,r.id)}))};})};}
   return {hulls,resolveHull,geometry,scene,exportSvg,reference};
 });
 </script><script>(function(root,factory){const api=factory(root.ShipModel || (typeof require==='function'?require('./model.js'):null));if(typeof module==='object'&&module.exports)module.exports=api;else root.ShipPresets=api;})(globalThis,function(M){
   function label(q,n,name){q.number=n;q.name=name;return q;}
-  function linkSides(d){const hull=d.items.find(q=>q.category==='hull'&&q.kind==='path');if(hull)M.setCompartmentLayout(d,hull.id,M.compartments.createDefault());for(const q of d.items.filter(q=>q.kind==='turret'&&q.x<0)){const other=d.items.find(b=>b.kind==='turret'&&b.category===q.category&&b.x===-q.x&&b.y===q.y);if(other){q.mirrorId=other.id;other.mirrorId=q.id;M.syncMirror(d,q.id);}}return d;}
+  /* 仅为新建预设投影矩形建筑的舰长范围；后续建筑与分舱可独立编辑。 */
+  function presetCompartments(d,hull){
+    const C=M.compartments,c=C.createDefault(),bounds=M.hullLocalBounds(hull),length=bounds.maxY-bounds.minY;
+    const spans=d.items.filter(q=>['low','high'].includes(q.category)).map((q,i)=>{
+      if(q.kind!=='rect')throw Error('预设建筑需要矩形范围');
+      const ys=[[0,0],[q.w,0],[q.w,q.h],[0,q.h]].map(([x,y])=>M.inversePoint(hull,M.transform(q,{x,y})).y),start=(Math.min(...ys)-bounds.minY)/length,end=(Math.max(...ys)-bounds.minY)/length;
+      if(start<0||end>1||end<=start)throw Error('预设建筑超出舰长范围');
+      return {start,end,layerId:q.category==='low'?'deck':'upper',room:{id:'building-'+(i+1),type:'generic',name:q.name,note:''}};
+    });
+    const original=c.stations,stations=[...new Set([...original,...spans.flatMap(s=>[s.start,s.end])])].sort((a,b)=>a-b),oldRows=c.cells;
+    c.stations=stations;c.cells=c.layers.map((layer,li)=>stations.slice(0,-1).map((start,s)=>{
+      const mid=(start+stations[s+1])/2;if(li<2)return oldRows[li][original.findIndex((u,i)=>u<=mid&&mid<original[i+1])];
+      const matches=spans.filter(p=>p.layerId===layer.id&&mid>=p.start&&mid<p.end);if(matches.length>1)throw Error('同层预设建筑范围不能重叠');return matches[0]?.room.id||{state:'none'};
+    }));c.rooms.push(...spans.map(s=>s.room));return C.validate(c);
+  }
+  function linkSides(d){const hull=d.items.find(q=>q.category==='hull'&&q.kind==='path');if(hull)M.setCompartmentLayout(d,hull.id,presetCompartments(d,hull));for(const q of d.items.filter(q=>q.kind==='turret'&&q.x<0)){const other=d.items.find(b=>b.kind==='turret'&&b.category===q.category&&b.x===-q.x&&b.y===q.y);if(other){q.mirrorId=other.id;other.mirrorId=q.id;M.syncMirror(d,q.id);}}return d;}
   function battleshipTriple(){const d=M.blank();d.name='战列舰（三联主炮）';
     const hull=M.symmetricHull([{x:0,y:-340},{x:-95,y:-245},{x:-125,y:-30},{x:-98,y:285},{x:-45,y:335},{x:0,y:335}]);label(hull,'H1','舰体轮廓');d.items.push(hull);
-    d.items.push(label(M.shape('rect','low',-63,-118,126,260),'B1','低层甲板'));
+    d.items.push(label(M.shape('rect','low',-63,-118,126,260),'B1','甲板室'));
     d.items.push(label(M.shape('rect','high',-38,-18,76,105),'B2','高层建筑'));
     d.items.push(label(M.shape('ellipse','funnel',-24,100,48,64),'F1','烟囱'));
     [[0,-225,0],[0,-155,0],[0,230,180]].forEach((v,i)=>{const t=M.turret('main',v[0],v[1],3);t.direction=v[2];d.items.push(label(t,`M${i+1}`,`主炮 ${i+1}`));});
@@ -320,7 +342,7 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
     return linkSides(d);
   }
   function battleshipTwin(){const d=M.blank();d.name='战列舰（双联主炮）';const hull=M.symmetricHull([{x:0,y:-320},{x:-90,y:-220},{x:-118,y:160},{x:-75,y:305},{x:0,y:305}]);d.items.push(label(hull,'H1','舰体轮廓'));
-    d.items.push(label(M.shape('rect','low',-55,-145,110,265),'B1','甲板'));d.items.push(label(M.shape('rect','high',-27,-12,54,105),'B2','舰桥'));d.items.push(label(M.shape('ellipse','funnel',-20,102,40,50),'F1','烟囱'));
+    d.items.push(label(M.shape('rect','low',-55,-145,110,265),'B1','甲板室'));d.items.push(label(M.shape('rect','high',-27,-12,54,105),'B2','舰桥'));d.items.push(label(M.shape('ellipse','funnel',-20,102,40,50),'F1','烟囱'));
     [[0,-235,0],[0,-170,0],[0,215,180],[0,275,180]].forEach((v,i)=>{const q=M.turret('main',v[0],v[1],2);q.direction=v[2];d.items.push(label(q,`M${i+1}`,`主炮 ${i+1}`));});
     for(let i=0;i<6;i++){const side=i%2?1:-1,row=Math.floor(i/2),q=M.turret('secondary',side*67,-72+row*100,2);q.direction=side*90;d.items.push(label(q,`S${i+1}`,`副炮 ${i+1}`));}
     for(let i=0;i<8;i++){const side=i%2?1:-1,row=Math.floor(i/2),q=M.turret('largeAA',side*87,-145+row*100,2);q.direction=side*90;d.items.push(label(q,`A${i+1}`,`大型防空 ${i+1}`));}
@@ -337,7 +359,7 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
   try{const raw=localStorage.getItem('ship-layout-editor-v1')||localStorage.getItem('iron-tide-ship-layout-v1');if(raw){state.history.replace(adoptHullSymmetry(M.parse(raw)));state.notice='已恢复本机草稿';}}catch(e){state.notice='本机草稿读取失败：'+e.message;}
   const doc=()=>state.history.doc;
   const compMode=()=>doc().options.compartmentView??'layout';
-  function compContext(){const selected=doc().items.find(q=>state.selected.includes(q.id)&&q.kind==='path'&&q.category==='hull'),hull=V.resolveHull(doc(),state.compHullId||selected?.id),layout=hull?.compartmentLayout;if(!layout)return {hull,layout};const layer=layout.layers.find(l=>l.id===state.compLayerId)||layout.layers.find(l=>l.id==='lower')||layout.layers[0],segment=Math.max(0,Math.min(state.compSelection?.hullId===hull.id?state.compSelection.segment:3,layout.stations.length-2)),li=layout.layers.indexOf(layer),roomId=layout.cells[li][segment];return {hull,layout,layer,segment,room:layout.rooms.find(r=>r.id===roomId)};}
+  function compContext(){const selected=doc().items.find(q=>state.selected.includes(q.id)&&q.kind==='path'&&q.category==='hull'),hull=V.resolveHull(doc(),state.compHullId||selected?.id),layout=hull?.compartmentLayout;if(!layout)return {hull,layout};const layer=layout.layers.find(l=>l.id===state.compLayerId)||layout.layers.find(l=>l.id==='lower')||layout.layers[0],fallback=layout.stations.findIndex((u,i)=>u<=.56&&.56<layout.stations[i+1]),segment=Math.max(0,Math.min(state.compSelection?.hullId===hull.id?state.compSelection.segment:fallback,layout.stations.length-2)),li=layout.layers.indexOf(layer),roomId=layout.cells[li][segment];return {hull,layout,layer,segment,cellState:C.cellState(roomId),room:typeof roomId==='string'?layout.rooms.find(r=>r.id===roomId):undefined};}
   function compScene(extra={}){const c=compContext();return V.scene(doc(),{hullId:c.hull?.id,layerId:c.layer?.id,segment:c.segment,edit:state.tool==='select',t:s=>window.AMMLocale?.t(s)||s,...extra});}
   function compExportOptions(extra={}){const c=compContext();return {hullId:c.hull?.id,layerId:c.layer?.id,segment:c.segment,t:s=>window.AMMLocale?.t(s)||s,...extra};}
   function selectComp(hullId,layerId,segment){state.compHullId=hullId;state.compLayerId=layerId;state.compSelection={hullId,layerId,segment};state.selected=[];state.tool='select';}
@@ -389,14 +411,16 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
     else{html+=`<p class="comp-info full">${c.layout.stations.length-1} 段 · ${c.layout.layers.length} 层 · ${c.layout.rooms.length} 个舱室</p><label class="full">当前高度层<select data-comp-control="layer" data-locale-ignore>${c.layout.layers.map(l=>`<option value="${esc(l.id)}" ${c.layer.id===l.id?'selected':''}>${esc(l.name)}</option>`).join('')}</select></label>`;
       html+=field('层名称','name',c.layer.name,'text',disabled).replace('data-field','data-comp-layer')+field('层底 m','bottom',c.layer.bottom,'number',`step="0.1" ${disabled}`).replace('data-field','data-comp-layer')+field('层顶 m','top',c.layer.top,'number',`step="0.1" ${disabled}`).replace('data-field','data-comp-layer');
       html+=`<button id="comp-add-layer" ${disabled}>新增高度层</button><button id="comp-remove-layer" ${disabled}>删除当前层</button><p class="hint full">共享高度界线会同步相邻层；删除层只移除本层分区，可撤销。水线为0，负高度仅作布局参考。</p><div class="comp-type-legend">${Object.values(C.types).map(([name,color])=>`<span><i class="legend-swatch" style="--module-color:${color}"></i>${name}</span>`).join('')}</div><button id="comp-remove-all" ${disabled}>移除分舱数据</button>`;
+      html+='<p class="hint full">彩色为舱室，虚线为无舱室，斜线为尚未配置。</p><p class="hint full">新建战列舰按俯视建筑范围初始化上层分舱，之后可独立调整。</p>';
+      if(c.layout.version===1)html+='<p class="hint full">旧布局分舱保持原样；新建战列舰可使用更新后的预设。</p>';
     }
     $('compartment-controls').innerHTML=html;$('compartment-section').open=compMode()!=='layout';$('compartment-views').querySelectorAll('[data-comp-view]').forEach(b=>{b.classList.toggle('active',b.dataset.compView===compMode());b.setAttribute('aria-pressed',String(b.dataset.compView===compMode()));});
   }
   function renderCompProperties(c){const {hull,layout,layer,segment,room}=c,disabled=canEdit(hull)?'':'disabled';let html=`<p class="status-hint">舱段 ${segment+1} · <span data-locale-ignore>${esc(layer.name)}</span></p>`;
     html+=field('起点 %','start',Math.round(layout.stations[segment]*10000)/100,'number',`step="0.1" ${segment===0?'disabled':disabled}`).replace('data-field','data-comp-boundary')+field('终点 %','end',Math.round(layout.stations[segment+1]*10000)/100,'number',`step="0.1" ${segment===layout.stations.length-2?'disabled':disabled}`).replace('data-field','data-comp-boundary');
     if(room){html+=`<label class="full">舱室类型<select data-comp-room="type" ${disabled}>${Object.entries(C.types).map(([key,[name]])=>`<option value="${key}" ${room.type===key?'selected':''}>${name}</option>`).join('')}</select></label>`+field('舱室名称','name',room.name,'text',disabled).replace('data-field','data-comp-room')+`<label class="full">舱室备注<textarea data-comp-room="note" ${disabled}>${esc(room.note)}</textarea></label><p class="hint full">同一编号的所有格子共享名称、类型与备注。</p><div class="comp-ranges full" data-locale-ignore>${esc(room.id)}<br>${C.roomRanges(layout,room.id).map(r=>`${esc(r.layerName)}：${Math.round(r.start*10000)/100}–${Math.round(r.end*10000)/100}% · ${r.bottom}–${r.top}m`).join('<br>')}</div>`;}
-    else html+='<p class="empty">未定义舱室。可先设为独立舱，再填写用途。</p>';
-    html+=`<button id="comp-new-room" ${disabled}>设为独立舱</button><button id="comp-merge-before" ${disabled}>并入前段同层舱室</button><button id="comp-merge-below" ${disabled}>并入下层同段舱室</button><button id="comp-clear" ${disabled}>清空本格（未定义）</button><div class="separator"></div><button id="comp-split" ${disabled}>中分本段（所有层）</button><button id="comp-merge-segment" ${disabled}>合并后一段（所有层）</button><p class="hint full">合并后各层保留当前段舱室，右段内容被覆盖；可撤销。图纸仅作设计参考。</p>`;$('properties').innerHTML=html;
+    else html+=c.cellState==='none'?'<p class="empty">无舱室：已确认此格没有封闭舱室。</p>':'<p class="empty">尚未配置：此格的舱室情况还未确定。</p>';
+    html+=`<button id="comp-new-room" ${disabled}>设为独立舱</button><button id="comp-merge-before" ${disabled}>并入前段同层舱室</button><button id="comp-merge-below" ${disabled}>并入下层同段舱室</button><button id="comp-none" ${disabled}>标为无舱室</button><button id="comp-clear" ${disabled}>清空为尚未配置</button><div class="separator"></div><button id="comp-split" ${disabled}>中分本段（所有层）</button><button id="comp-merge-segment" ${disabled}>合并后一段（所有层）</button><p class="hint full">合并后各层保留当前段舱室，右段内容被覆盖；可撤销。图纸仅作设计参考。</p>`;$('properties').innerHTML=html;
   }
   function renderProperties(){const c=compContext();if(state.compSelection&&c.layout&&compMode()!=='layout'){renderCompProperties(c);return;}const d=doc(),q=d.items.find(x=>x.id===state.selected[0]);if(!q||state.selected.length!==1){$('properties').innerHTML=`<p class="empty">${state.selected.length>1?`已选 ${state.selected.length} 项。可拖动、组合、复制或删除。按住Shift拖动选区右下角方柄，可等比缩放整组。锁定组件需先解锁。`:'选择对象后可调整位置、尺寸、角度和备注。'}</p>`;return;}
     let html=`${field('编号','number',q.number||'','text')}${field('名称','name',q.name,'text')}<label class="full">类别<select data-field="category">${Object.entries(M.categories).map(([key,v])=>`<option value="${key}" ${q.category===key?'selected':''}>${v[0]}</option>`).join('')}</select></label>`;
@@ -481,6 +505,7 @@ html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column}.t
     else if(id==='comp-merge-before')changeComp(d=>C.mergeCell(d,c.layer.id,c.segment,'before'));
     else if(id==='comp-merge-below')changeComp(d=>C.mergeCell(d,c.layer.id,c.segment,'below'));
     else if(id==='comp-clear')changeComp(d=>C.clearCell(d,c.layer.id,c.segment));
+    else if(id==='comp-none')changeComp(d=>C.setCellState(d,c.layer.id,c.segment,'none'));
     else if(id==='comp-split'){changeComp(d=>C.splitSegment(d,c.segment));selectComp(c.hull.id,c.layer.id,c.segment+1);render();}
     else if(id==='comp-merge-segment')changeComp(d=>C.removeStation(d,c.segment+1));
   }catch(error){render();status(error.message,true);}});

@@ -54,3 +54,17 @@ window.AMMLocale.register({
 window.AMMLocale.registerPatterns([
   [/^(\d+) 段 · (\d+) 层 · (\d+) 个舱室$/, (sections,layers,rooms)=>`${sections} sections · ${layers} layers · ${rooms} compartments`],
 ]);
+window.AMMLocale.register({
+  '无舱室':'No compartment','尚未配置':'Unconfigured','主甲板面':'Main deck',
+  '无舱室：已确认此格没有封闭舱室。':'No compartment: this cell is confirmed to have no enclosed room.',
+  '尚未配置：此格的舱室情况还未确定。':'Unconfigured: the compartment state of this cell is not yet specified.',
+  '标为无舱室':'Mark as no compartment','清空为尚未配置':'Clear to unconfigured',
+  '彩色为舱室，虚线为无舱室，斜线为尚未配置。':'Color: compartment. Dashed: no compartment. Hatching: unconfigured.',
+  '新建战列舰按俯视建筑范围初始化上层分舱，之后可独立调整。':'New battleship presets initialize upper compartments from building length spans. They can then be edited independently.',
+  '旧布局分舱保持原样；新建战列舰可使用更新后的预设。':'Existing compartments are preserved. Create a new battleship to use the updated preset.',
+  '斜线：尚未配置 / 高度间隔 · 虚线：无舱室':'Hatching: unconfigured / height gap · Dashed: no compartment',
+  '尚未配置高度间隔':'Unconfigured height gap','分舱格状态无效':'Invalid compartment cell state',
+  '不支持的分舱版本':'Unsupported compartment version','主甲板层引用无效':'Invalid main-deck layer reference',
+  '旧版分舱不支持无舱室状态':'The old compartment version does not support the no-compartment state',
+  '预设建筑需要矩形范围':'Preset buildings need rectangular footprints','预设建筑超出舰长范围':'A preset building extends beyond the hull length','同层预设建筑范围不能重叠':'Preset buildings on the same layer cannot overlap',
+});
