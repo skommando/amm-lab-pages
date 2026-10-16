@@ -4,3 +4,5 @@
 [data-site-theme="dark"]{color-scheme:dark}[data-amm-locale-switch]{right:12px!important;left:auto!important;transform:none!important}
 [data-site-theme="light"] .stage-views{background:#e5edf3;border-color:#a8bccb}[data-site-theme="light"] :is(.stage-views small,.comp-info,.comp-type-legend,.comp-ranges){color:#526b7c}[data-site-theme="light"] #compartment-section{border-color:#b7c8d3}[data-site-theme="light"] #compartment-section summary{color:#775123}
 [data-site-theme="light"] .path-editor{background:#e5edf3;border-color:#a8bccb}[data-site-theme="light"] .path-editor :is(label,p){color:#365c73}[data-site-theme="light"] .path-editor select{background:#fff;color:#203748;border-color:#94acbd}
+
+[data-site-theme="light"] .weapon-fields{border-color:#b7c8d3}[data-site-theme="light"] .weapon-fields legend{color:#775123}[data-site-theme="light"] .weapon-shortcuts span{color:#526b7c}[data-site-theme="light"] .weapon-rule{color:#236c77}
