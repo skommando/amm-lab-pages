@@ -20,6 +20,13 @@ window.AMMLocale.register({
   '船体左右联动 · 可编辑任一侧':'Linked hull symmetry · Edit either side','左右部件联动 · 修改会同步到另一侧':'Linked pair · Changes mirror to the other side',
   '未指定':'Unspecified','随对象备注':'Item notes','显示':'Visible','锁定':'Locked','船体左右联动':'Link hull symmetry','旧轮廓已对称时可无损开启；不规则旧图可用“对称船体”重画半边。':'Enable this on an already symmetric outline without changing its shape. For an irregular outline, draw a new half with Symmetric hull.',
   '整条轮廓平滑':'Smooth whole outline','整条轮廓转折线':'Straighten whole outline','沿曲线插入顶点':'Insert point on curve','删除顶点':'Delete point','后段设曲线':'Curve next segment','后段设直线 / 尖角':'Straighten next segment / corner',
+  '鱼雷发射架':'Torpedo launcher','鱼雷架':'Torpedo rack','鱼雷发射架工具':'Torpedo launcher tool','鱼雷参数':'Torpedo parameters','导出鱼雷架参数参考':'Export torpedo launcher parameters','每架管数':'Tubes per rack','新建鱼雷架管数':'New launcher tube count','3管':'3 tubes','4管':'4 tubes',
+  '双击轮廓就地插点，右键顶点删除；Alt临时单端。':'Double-click the outline to insert a point; right-click a point to delete it. Alt edits one handle end.',
+  '每次点击放置一架，可连续放置多架。3/4管可修改，射界放置后设置；数量和布置按具体舰型、年代核对。':'Click to place each rack; repeat for multiple racks. Choose 3 or 4 tubes and set its arc after placing. Check counts and positions for the chosen ship and period.',
+  '每架可装3或4管，可复制或连续放置多架；实际数量、位置和射界按具体舰型与年代核对。':'Each rack has 3 or 4 tubes. Duplicate or place more racks. Verify counts, positions and firing arcs for the chosen ship and period.',
+  '鱼雷架须为3管或4管':'A torpedo rack needs 3 or 4 tubes','武器转轴或朝向无效':'Invalid weapon pivot or heading','线段无效':'Invalid segment','插点比例须在0与1之间':'The split position must be between 0 and 1','顶点数量达到2000上限':'The outline has reached its 2000-point limit','轮廓命中坐标无效':'Invalid outline hit position','轮廓命中范围无效':'Invalid outline hit tolerance',
+  '已在轮廓点击位置插入顶点':'Point inserted at the clicked outline position','已选中附近顶点，未重复插入':'Nearby point selected; no duplicate added','鱼雷架参数参考已下载 · 配置需按舰型与年代核对':'Torpedo parameters downloaded · Verify settings by ship and period',' 留空可取消指定。半径只控制示意长度，不是射程。':' Leave blank to clear. Radius is visual, not weapon range.',
+  '左右对称开启时，中轴手柄也会镜像；完全独立需关闭“船体左右联动”。':'When hull symmetry is enabled, centerline handles stay mirrored. Disable Link hull symmetry for independent ends.',
   '轮廓编辑':'Outline editing','插入顶点':'Insert point','手柄':'Handles','手柄模式':'Handle mode','两端联动':'Linked ends','单端独立':'Independent end','手柄模式无效':'Invalid handle mode','舰长退化，不能保留分舱':'Hull length is too short to retain compartments',
   '插点位于当前点的后段；Alt临时单端；选中顶点后Delete删点。':'Insert into the next segment. Hold Alt for one end. Select a point and press Delete to remove it.',
   '左右对称始终生效；中轴点单端也会镜像。完全独立需关闭“船体左右联动”。':'Hull symmetry stays active, including centerline handles. Disable Link hull symmetry for fully independent ends.',
@@ -39,7 +46,7 @@ window.AMMLocale.register({
 window.AMMLocale.registerPatterns([
   [/^已选 (\d+) 项。(.+)$/, (count,rest)=>`${count} items selected. ${window.AMMLocale.t(rest)}`],
   [/^已选 (\d+) 个(.+)组件$/, (count,kind)=>`${count} ${window.AMMLocale.t(kind)} parts selected`],
-  [/^以炮塔朝向为中心，左右各 ([\d.]+)°。(.+)$/, (angle,rest)=>`Centered on the turret heading, ${angle}° each side. ${window.AMMLocale.t(rest)}`],
+  [/^以(?:炮塔|武器)朝向为中心，左右各 ([\d.]+)°。(.+)$/, (angle,rest)=>`Centered on the weapon heading, ${angle}° each side. ${window.AMMLocale.t(rest)}`],
 ]);
 window.AMMLocale.register({
   '分舱参数':'Compartment parameters','导出分舱参数参考':'Export compartment reference','图纸视图':'Drawing view','部件布局':'Components','平面分舱':'Plan compartments','高度分层':'Height layers','联合视图':'Combined view','一个船体 · 分舱为附属布局':'One hull · Compartments belong to it',
