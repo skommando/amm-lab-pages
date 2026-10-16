@@ -6,3 +6,4 @@
 [data-site-theme="light"] .path-editor{background:#e5edf3;border-color:#a8bccb}[data-site-theme="light"] .path-editor :is(label,p){color:#365c73}[data-site-theme="light"] .path-editor select{background:#fff;color:#203748;border-color:#94acbd}
 
 [data-site-theme="light"] .weapon-fields{border-color:#b7c8d3}[data-site-theme="light"] .weapon-fields legend{color:#775123}[data-site-theme="light"] .weapon-shortcuts span{color:#526b7c}[data-site-theme="light"] .weapon-rule{color:#236c77}
+[data-site-theme="light"] .measure-readout{background:#e7f0f4;border-color:#b7c8d3}[data-site-theme="light"] .measure-readout strong{color:#1f6977}[data-site-theme="light"] :is(.measure-readout span,.measure-readout small,.measure-advanced summary,.measurement-section h2 small){color:#526b7c}[data-site-theme="light"] .measure-status{color:#775123;border-color:#b7c8d3}

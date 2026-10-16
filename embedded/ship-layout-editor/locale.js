@@ -99,3 +99,11 @@ window.AMMLocale.registerPatterns([
  [/^图纸尺寸 (\w+) 须在([\d.]+)–([\d.]+)之间$/, (field,min,max)=>`Drawing dimension ${field} must be between ${min} and ${max}`],
 ]);
 window.AMMLocale.register({'布局格式 v2 · 本地处理':'Layout v2 · Local processing','已恢复本机草稿 · 布局格式 v2':'Local draft restored · Layout v2','JSON 已导入 · 布局格式 v2':'JSON imported · Layout v2'});
+window.AMMLocale.register({
+ '尺度与计量':'Scale and dimensions','计量船体':'Hull to measure','已知轮廓总长 m':'Known overall length m','填写实际舰长':'Enter known overall length','按舰长标定全图':'Calibrate drawing by length','直接设置比例':'Set scale directly','每图纸单位 = m':'Meters per drawing unit','每图纸单位米数':'Meters per drawing unit','应用比例':'Apply scale','清除标定':'Clear calibration',
+ '一次标定影响全图；只换算单位，不改变布局。改轮廓或缩放后，米制尺寸随之更新。':'Calibration applies to the whole drawing without changing geometry. Editing or scaling the hull updates its metric dimensions.',
+ '量取船体自身方向的轮廓总长与最大宽，含曲线；不含武器，不是水线长。口径与分舱高度不受标定影响。':'Measures overall length and maximum beam along the hull’s own axes, including curves and excluding weapons. This is not waterline length. Caliber and compartment heights stay unchanged.',
+ '轮廓总长':'Overall length','总长':'Length','最大宽':'Beam','图纸单位':'drawing units','未标定':'Uncalibrated','尺寸标注':'Dimensions','选择计量船体':'Select a hull','先绘制闭合船体':'Draw a closed hull first','未标定 · 填写已知舰长后显示米数':'Uncalibrated · Enter known length to show meters','已标定 · 全图统一比例':'Calibrated · One scale for the drawing','请选择计量船体，再按已知舰长标定。':'Select a hull before calibrating by its known length.','比例已更新 · 布局坐标保持不变':'Scale updated · Drawing coordinates unchanged',
+ '计量比例须为大于0的有限数，计量版本须为1':'Scale must be a positive finite number, with measurement version 1','米制坐标或尺寸超出可计算范围':'Metric coordinates or dimensions exceed the numeric range','请选择要标定的闭合船体':'Select the closed hull to calibrate','船体轮廓退化，不能按舰长标定':'The hull is degenerate and cannot be calibrated by length','实际舰长须为大于0的有限米数':'Known length must be a positive finite number of meters','尺寸显示选项无效':'Invalid dimension display setting'
+});
+window.AMMLocale.registerPatterns([[/^标定失败：(.+)$/,message=>`Calibration failed: ${window.AMMLocale.t(message)}`]]);
