@@ -107,3 +107,10 @@ window.AMMLocale.register({
  '计量比例须为大于0的有限数，计量版本须为1':'Scale must be a positive finite number, with measurement version 1','米制坐标或尺寸超出可计算范围':'Metric coordinates or dimensions exceed the numeric range','请选择要标定的闭合船体':'Select the closed hull to calibrate','船体轮廓退化，不能按舰长标定':'The hull is degenerate and cannot be calibrated by length','实际舰长须为大于0的有限米数':'Known length must be a positive finite number of meters','尺寸显示选项无效':'Invalid dimension display setting'
 });
 window.AMMLocale.registerPatterns([[/^标定失败：(.+)$/,message=>`Calibration failed: ${window.AMMLocale.t(message)}`]]);
+window.AMMLocale.register({
+ '真实舰长（m）':'Real ship length (m)','填写实际总长，未知留空':'Enter real overall length; leave unknown blank','保存真实舰长':'Save real ship length','整舰的真实总长，独立保存与导出。修改轮廓或缩放不会改变；留空后保存可清除。':'The ship’s real overall length is saved and exported independently. Outline edits or scaling never change it. Save a blank value to clear it.',
+ '图纸辅助比例':'Drawing scale helpers','按真实舰长标定图纸':'Calibrate from saved real length','使用已保存的真实舰长和选定轮廓，只调整全图比例，不改真实舰长。':'Uses the saved real length and selected hull. Changes the drawing scale only, leaving real length unchanged.',
+ '图纸尺寸随轮廓和缩放变化，仅作绘图参考；真实舰长始终以单独保存的记录为准。':'Drawing dimensions change with geometry and scale. The separately saved real length remains authoritative.',
+ '图纸换算总长':'Drawing length','图纸换算最大宽':'Drawing beam','图纸总长':'Drawing length','图纸最大宽':'Drawing beam','图纸未标定 · 真实舰长单独保存':'Drawing uncalibrated · Real length is saved separately','图纸已标定 · 全图统一比例':'Drawing calibrated · One scale for the drawing','真实舰长未指定':'Real ship length unspecified','已记录真实舰长':'Saved real ship length','记录真实舰长':'Recorded real ship length','真实舰长已保存 · 修改轮廓不会改变':'Real ship length saved · Outline edits will not change it','真实舰长须为大于0的有限米数，未知请留空':'Real ship length must be a positive finite number of meters; leave unknown values blank'
+});
+window.AMMLocale.registerPatterns([[/^保存真实舰长失败：(.+)$/,message=>`Could not save real length: ${window.AMMLocale.t(message)}`]]);
