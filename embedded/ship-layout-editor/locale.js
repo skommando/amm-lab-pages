@@ -114,3 +114,12 @@ window.AMMLocale.register({
  '图纸换算总长':'Drawing length','图纸换算最大宽':'Drawing beam','图纸总长':'Drawing length','图纸最大宽':'Drawing beam','图纸未标定 · 真实舰长单独保存':'Drawing uncalibrated · Real length is saved separately','图纸已标定 · 全图统一比例':'Drawing calibrated · One scale for the drawing','真实舰长未指定':'Real ship length unspecified','已记录真实舰长':'Saved real ship length','记录真实舰长':'Recorded real ship length','真实舰长已保存 · 修改轮廓不会改变':'Real ship length saved · Outline edits will not change it','真实舰长须为大于0的有限米数，未知请留空':'Real ship length must be a positive finite number of meters; leave unknown values blank'
 });
 window.AMMLocale.registerPatterns([[/^保存真实舰长失败：(.+)$/,message=>`Could not save real length: ${window.AMMLocale.t(message)}`]]);
+window.AMMLocale.register({
+ '真实舰宽（m）':'Real ship beam (m)','填写实际最大舰宽，未知留空':'Enter real maximum beam; leave unknown blank','保存真实舰宽':'Save real ship beam','真实舰宽未指定':'Real ship beam unspecified','已记录真实舰宽':'Saved real ship beam','记录真实舰宽':'Recorded real ship beam',
+ '整舰的真实总长与最大舰宽分别保存、导出。修改轮廓或缩放不会改变；留空后保存只清除对应记录。':'The ship’s real overall length and maximum beam are saved and exported separately. Geometry edits or scaling never change them. Saving a blank value clears only that record.',
+ '真实舰宽已保存 · 修改轮廓不会改变':'Real ship beam saved · Outline edits will not change it','真实舰宽须为大于0的有限米数，未知请留空':'Real ship beam must be a positive finite number of meters; leave unknown values blank',
+ '使用已保存的真实舰长和选定轮廓，只调整全图比例，不改真实长宽。':'Uses the saved real length and selected hull. Changes the drawing scale only, leaving real length and beam unchanged.',
+ '图纸尺寸随轮廓和缩放变化，仅作绘图参考；真实长宽均以单独保存的记录为准。':'Drawing dimensions change with geometry and scale. The separately saved real length and beam remain authoritative.'
+});
+window.AMMLocale.registerPatterns([[/^保存真实舰宽失败：(.+)$/,message=>`Could not save real beam: ${window.AMMLocale.t(message)}`]]);
+window.AMMLocale.register({'图纸未标定 · 真实长宽单独保存':'Drawing uncalibrated · Real length and beam are saved separately'});
