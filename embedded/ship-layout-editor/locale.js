@@ -123,3 +123,27 @@ window.AMMLocale.register({
 });
 window.AMMLocale.registerPatterns([[/^保存真实舰宽失败：(.+)$/,message=>`Could not save real beam: ${window.AMMLocale.t(message)}`]]);
 window.AMMLocale.register({'图纸未标定 · 真实长宽单独保存':'Drawing uncalibrated · Real length and beam are saved separately'});
+window.AMMLocale.register({
+ '图纸与视图':'Document and views','文件与保存说明':'File and save options','普通导入（只读）':'Import a read-only copy','另存 JSON':'Save JSON as','另存布局JSON':'Save layout JSON as','模块属性':'Component properties','复制组件':'Copy components','粘贴组件':'Paste components','快速副本':'Quick duplicate','制作完整度':'Production readiness','缺项以橙色标记；仍可保存、导出，参数附缺项清单。未知值请保留未指定。':'Missing fields are marked in orange. Drafts and exports remain available, with a checklist included in parameters. Keep unknown values unspecified.',
+ '舰体与结构':'Hull and structures','火炮武器':'Gun mounts','鱼雷武器':'Torpedo mounts','辅助图形与标注':'Auxiliary shapes and notes','该组件类型不支持此类别':'This component type does not support that category','闭合舰体轮廓':'Closed hull outline','闭合轮廓':'Close outline','文字内容':'Text content','必填参数已齐全':'Required fields complete','射界中心':'Arc center','射界开角':'Arc width','射界中心°':'Arc center °','射界开角°':'Arc width °',
+ '组件已复制 · Ctrl+V粘贴在旁边':'Components copied · Ctrl+V pastes beside the source','组件已粘贴 · 可撤销':'Components pasted · Undo is available','请先选择组件':'Select components first','请先复制组件':'Copy components first','组件剪贴板无效':'Invalid component clipboard','粘贴偏移次数无效':'Invalid paste offset','框选范围无效':'Invalid selection rectangle',
+ '用途与规格说明':'Roles and specification notes','图纸尺寸说明':'Drawing dimension notes','静置朝向':'Resting heading','射界扇形':'Firing arc sector','射界已隐藏，请点击显示选中射界。':'Firing arcs are hidden. Use Show selected firing arc.','中心取当前静置朝向':'Set arc center from resting heading','显示选中射界':'Show selected firing arc','示意半径（非射程）':'Display radius (not range)','方向与射界说明':'Heading and firing arc notes','请先填写射界中心与开角':'Specify the arc center and width first',
+ '目标优先：未指定':'Target priority: unspecified','目标优先：对海优先':'Target priority: surface first','目标优先：仅对海':'Target priority: surface only','目标优先：仅对空':'Target priority: air only','目标优先：停火':'Target priority: hold fire',
+ '关联文件':'Linked file','尚有未保存修改':'Unsaved changes remain','文件内容已同步':'File content is saved','只读导入':'Read-only import','未关联可写文件':'No writable file linked','Ctrl+S覆盖关联文件；Ctrl+Shift+S另存。新建、普通导入或刷新恢复的草稿，首次保存需选择文件。':'Ctrl+S saves to the linked file; Ctrl+Shift+S saves as. New, read-only imports and restored drafts need a file selected on their first save.','当前环境不支持覆盖原文件，保存会下载JSON副本。':'This environment cannot overwrite source files. Saving downloads a JSON copy.',
+ '正在处理文件，请稍后再试':'A file operation is in progress. Please wait.','当前浏览器不支持可写文件导入':'This browser does not support writable file imports','正在保存文件，请稍后再试':'A file is being saved. Please wait.','文档已切换，已取消旧文件操作':'Document changed; the old file operation was cancelled','当前浏览器不支持覆盖文件，请下载副本':'This browser cannot overwrite files. Download a copy instead.','未取得原文件写入权限':'Write permission for the source file was not granted','请先完成输入法输入':'Finish the current input method composition first','当前输入不是有效数字，请修正后保存':'The current input is not a valid number. Correct it before saving.','底图参数无效，请修正后保存':'Invalid reference image settings. Correct them before saving.','请先结束当前拖动':'Finish dragging before saving','已下载JSON副本，未覆盖原文件':'JSON copy downloaded; the source file was not overwritten','JSON已写入关联文件':'JSON saved to the linked file','文件快照已写入，仍有未保存修改':'Snapshot saved; newer changes remain unsaved','已取消保存':'Save cancelled','已取消导入':'Import cancelled','JSON已导入，可用Ctrl+S覆盖原文件':'JSON imported; Ctrl+S can save to the source file','JSON已只读导入，首次保存请选择文件':'JSON imported read-only; choose a file on the first save',
+ '空白或未选大件内拖动框选，完全包裹才选中；Shift/Ctrl追加。Ctrl+C/V复制粘贴组件，Ctrl+S保存，Ctrl+Shift+S另存。已选组件拖动移动；空格拖动平移。':'Drag in empty space or an unselected structure to select fully enclosed components. Shift/Ctrl adds to selection. Ctrl+C/V copies and pastes components; Ctrl+S saves; Ctrl+Shift+S saves as. Drag selected components to move; hold Space to pan.',
+ '对称船体：沿一侧从艏到艉点选，Enter完成。':'Symmetric hull: place points along one side, bow to stern. Enter finishes.','火炮的口径、炮座、用途能力及射界需在属性中补齐。':'Complete caliber, mount form, capabilities and firing arc in properties.','图形工具只创建结构或辅助图形；武器请使用火炮或鱼雷架。':'Shape tools create structures and auxiliary graphics. Use Gun mount or Torpedo rack for weapons.'
+});
+window.AMMLocale.registerPatterns([
+ [/^待完善 (\d+) 项$/,n=>`${n} required fields missing`],
+ [/^待完善 (\d+) 项 · (\d+) 个组件$/,(n,c)=>`${n} missing fields · ${c} components`],
+ [/^(.+)未填写$/,label=>`${window.AMMLocale.t(label)} is missing`],
+ [/^(.+)与组件类型不匹配$/,label=>`${window.AMMLocale.t(label)} does not match the component type`],
+ [/^编号重复$/,()=>`Duplicate component number`],
+ [/^(.+)（旧类别不适用）$/,label=>`${window.AMMLocale.t(label)} (incompatible legacy category)`],
+ [/^扇形已配置 · ([\d.]+)°$/,angle=>`Firing sector configured · ${angle}°`],
+ [/^尚缺：(.+)。仅设置示意半径不会产生射界。$/,fields=>`Missing: ${fields.split('、').map(s=>window.AMMLocale.t(s)).join(', ')}. A display radius alone does not define a firing arc.`]
+]);
+window.AMMLocale.register({'AI贴图以真实舰长、真实舰宽为尺寸依据；图纸换算仅作参考。':'AI ship textures use the recorded real length and beam as their dimensions. Drawing conversions are references only.'});
+window.AMMLocale.register({'剪贴板中没有可粘贴的组件':'The clipboard does not contain components to paste'});
+window.AMMLocale.register({'组件已复制到编辑器 · 点击粘贴组件':'Components copied in the editor · Use Paste components'});
