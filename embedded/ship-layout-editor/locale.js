@@ -1,5 +1,10 @@
-/* 只翻译界面；画布文字、船名、编号、备注与导出内容保留用户原文。 */
+/* 界面及画布系统词共用翻译；船名、编号、备注和独立用户文字保留原文。 */
 window.AMMLocale.register({
+  '俯视图':'Plan','纵向展开':'Profile','全舰横向叠加':'Transverse overlay','分舱':'Compartments','主甲板以下':'Below main deck','甲板室':'Deckhouse','层':'Level',
+  '舰长':'Length','舰宽':'Beam','图纸单位':'units','图例':'Legend','高度':'Height',
+  '装甲':'Armor','舰体侧面':'Hull side','甲板':'Deck','建筑侧面':'Structure side','建筑顶盖':'Structure roof','主炮侧面':'Turret side','主炮顶盖':'Turret roof',
+  '几何未设':'Geometry unset','高度未设':'Height unset','本体高未设':'Body height unset','间隙未设':'Gap unset','未校准':'Uncalibrated','无舱室':'None','舰体投影':'Hull projection',
+  '水线':'Waterline','船底':'Bottom','支承':'Support','基座':'Base','完整宽度':'Full width','调整尺寸':'Resize','新增3m层':'Add 3m level','分舱界线':'Station','层级示意':'Layer schematic',
   '舰船布局编辑器':'Ship Layout Editor','布局草图 · 本地处理':'Layout sketch · Local processing','← 工具目录':'← Tools',
   '切换主题':'Toggle theme','切换到亮色模式':'Switch to light mode','切换到暗色模式':'Switch to dark mode',
   '战列舰 · 三联':'Battleship · Triple','战列舰 · 双联':'Battleship · Twin','战列舰三联主炮':'Battleship with triple turrets','战列舰双联主炮':'Battleship with twin turrets',
