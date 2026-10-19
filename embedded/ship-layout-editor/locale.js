@@ -98,7 +98,6 @@ window.AMMLocale.register({
 window.AMMLocale.registerPatterns([
  [/^图纸尺寸 (\w+) 须在([\d.]+)–([\d.]+)之间$/, (field,min,max)=>`Drawing dimension ${field} must be between ${min} and ${max}`],
 ]);
-window.AMMLocale.register({'布局格式 v2 · 本地处理':'Layout v2 · Local processing','已恢复本机草稿 · 布局格式 v2':'Local draft restored · Layout v2','JSON 已导入 · 布局格式 v2':'JSON imported · Layout v2'});
 window.AMMLocale.register({
  '尺度与计量':'Scale and dimensions','计量船体':'Hull to measure','已知轮廓总长 m':'Known overall length m','填写实际舰长':'Enter known overall length','按舰长标定全图':'Calibrate drawing by length','直接设置比例':'Set scale directly','每图纸单位 = m':'Meters per drawing unit','每图纸单位米数':'Meters per drawing unit','应用比例':'Apply scale','清除标定':'Clear calibration',
  '一次标定影响全图；只换算单位，不改变布局。改轮廓或缩放后，米制尺寸随之更新。':'Calibration applies to the whole drawing without changing geometry. Editing or scaling the hull updates its metric dimensions.',
@@ -150,12 +149,12 @@ window.AMMLocale.register({'组件已复制到编辑器 · 点击粘贴组件':'
 /* v3编辑、独立预览与单主炮高度；只翻译界面，不改输入或图纸数据。 */
 window.AMMLocale.register({
  '布局格式 v3 · 本地处理':'Layout v3 · Local processing','已恢复本机草稿 · 布局格式 v3':'Local draft restored · Layout v3','中心':'Center','开角':'Width',
- '正式布局源 v3':'Layout source v3','布局身份':'Layout identity','正式舰体':'Primary hull','选择正式舰体':'Select the primary hull','旧稿保持原样；主动转换才合层。':'Legacy layouts are preserved. Convert explicitly to merge layers.',
- '显式转换为v3':'Convert to v3','复制为新舰身份':'Copy as a new ship','下载转换前备份':'Download pre-conversion backup','恢复转换前旧稿':'Restore pre-conversion layout','校验并导出正式源':'Validate and export source','叠加正式建筑／校准轮廓':'Overlay structures / calibrated outlines','新文件扩展名':'New file extension',
+ '正式布局源 v3':'Layout source v3','布局身份':'Layout identity','正式舰体':'Primary hull','选择正式舰体':'Select the primary hull',
+ '复制为新舰身份':'Copy as a new ship','校验并导出正式源':'Validate and export source','叠加正式建筑／校准轮廓':'Overlay structures / calibrated outlines','新文件扩展名':'New file extension',
  '普通保存仍允许缺项；保存文件不代表Unity已同步。正式空间取真实长宽，图纸比例仅作参考。':'Drafts may contain missing fields. Saving does not synchronize Unity. Spatial geometry uses real length and beam; drawing scale is a reference only.',
  '离线Prefab校准预览':'Offline prefab calibration preview','导入校准包':'Import calibration package','移除会话校准包':'Clear session calibration','未载入离线校准包；主炮图形仅为参考符号':'No offline calibration loaded; main gun graphics are reference symbols only.',
  '辅助预览':'Auxiliary preview','返回编辑':'Back to editing','单独打开尺寸、高度与全舰横向叠加核对；关闭后恢复原画布':'Open a separate dimension, height and transverse overview; closing it restores the editing canvas.','辅助预览 · 图形只读':'Auxiliary preview · Read-only graphics',
- '辅助预览 · 图形只读，关闭后返回原画布':'Auxiliary preview · Graphics are read-only; close it to return to the editing canvas.','旧稿只读预览 · 未升级或补写原配置':'Legacy preview · The source has not been upgraded or filled in.','已返回原编辑画布':'Returned to the editing canvas',
+ '辅助预览 · 图形只读，关闭后返回原画布':'Auxiliary preview · Graphics are read-only; close it to return to the editing canvas.','已返回原编辑画布':'Returned to the editing canvas',
  '安装与本体高度':'Mounting and body height','安装高度':'Mounting height','支承面':'Support surface','主甲板':'Main deck','基座高 m':'Pedestal height m','主炮本体高 m':'Main turret body height m','主炮本体高 m（必填）':'Main turret body height m (required)','建筑实体与高度':'Structure body and height','底部偏移 m':'Base offset m','实体高度 m':'Body height m','船底高度 m':'Hull bottom height m','主甲板高度 m':'Main deck height m',
  '设置建筑实体（局部矩形代理）':'Define a structure body (local rectangle)','＋在所选建筑上加一层':'＋ Add a level on the selected structure','＋本段上方新增建筑':'＋ Add a structure above this section',
  '新增俯视组件，初始高度3m为占位值；可直接拖边调整，选中后点＋继续加层。':'Add a plan-view component with a provisional 3m height. Drag its edges to resize; select it and use ＋ to add another level.',
@@ -173,8 +172,7 @@ window.AMMLocale.register({
  '双射界尚未接入当前Unity消费者；可保存布局草稿及鱼雷参考，不能导出正式源':'Two firing sectors are not yet supported by the Unity consumer. Save a layout draft or torpedo reference; formal source export is unavailable.',
  '声明本体高度尚未接入当前Unity消费者；可保存布局草稿及武器参考，不能导出正式源':'Declared body height is not yet supported by the Unity consumer. Save a layout draft or weapon reference; formal source export is unavailable.',
  '正式空间尚有缺项；可用普通保存保留草稿':'The formal source is incomplete. Use regular Save to keep a draft.','正式空间校验通过 · Unity绑定另行验证':'Spatial validation passed · Unity binding requires separate verification','完整v3源已导出；Unity绑定及战斗尚未接入':'Complete v3 source exported; this does not verify Unity binding or combat integration.',
- 'v1/v2仍可编辑、保存和导出参考。转换前的完整稿会保留在迁移备份中。':'v1/v2 layouts remain editable and exportable. An explicit conversion retains the complete original in its migration backup.',
- '已显式转换为v3草稿；旧稿备份保留，尚未写入源文件':'Converted to a v3 draft with the original retained; the source file has not been written.','已复制为新舰身份；保存时需选择文件':'Copied with a new ship identity; choose a file when saving.',
+ '已复制为新舰身份；保存时需选择文件':'Copied with a new ship identity; choose a file when saving.',
  '本体高度仅用于主炮':'Body height is only configured for main turrets','炮塔本体高度须为正有限米数，未知留空':'Turret body height must be a positive finite value in meters; leave unknown values blank.','请选择未锁定的建筑':'Select an unlocked structure','请先选择并解锁组件':'Select and unlock a component first',
  '拖动调整占地或高度':'Drag to adjust footprint or height','在此建筑上新增一层，初始高度3m':'Add a level here with an initial 3m height','辅助预览只读，请返回编辑画布后操作':'Preview graphics are read-only; return to editing first.','请先完成当前绘制或拖动，再打开辅助预览':'Finish drawing or dragging before opening the auxiliary preview.'
 });
@@ -187,3 +185,10 @@ window.AMMLocale.registerPatterns([
  [/^上层 (\d+)$/,n=>`Upper level ${n}`],
  [/^离线校准包 v(\d+) · (\d+)项 · (.+)$/,(v,n,rest)=>`Offline calibration v${v} · ${n} entries · ${window.AMMLocale.t(rest)}`]
 ]);
+window.AMMLocale.register({'请先选择正式舰体':'Select the primary hull first','请在分舱面板建立甲板以下舱室':'Create under-deck compartments in the compartment panel','保留待解决':'Keep unresolved','此段没有可选舱室，请在分舱面板配置。':'No candidate compartment is available for this section. Configure it in the compartment panel.'});
+window.AMMLocale.registerPatterns([[/^(.+) · 第(\d+)段舱室待确认$/, (h,n)=>`${h} · Confirm compartment in section ${n}`],[/^本机草稿更新失败：(.+)$/,m=>`Could not update the local draft: ${window.AMMLocale.t(m)}`]]);
+window.AMMLocale.register({
+ '本体高独立于基座，不随图纸缩放改变。平面轮廓待Prefab校准；无校准时高度尺底部按安装面暂算，未计未知底偏移。Unity按声明高度生成本体顶面，炮口保留独立校准。':'Body height excludes the pedestal and is independent of drawing scale. Plan outlines require prefab calibration. Without it, the guide provisionally starts at the mounting surface. Unity uses the declared body height; muzzle calibration remains independent.',
+ '两区共同属于这一架，不增加管数、备弹或火力通道。切回单扇形仅保留射区1，可撤销。Unity已支持双射界；正式使用仍需完成雷架绑定与Prefab炮口校准。':'Both sectors belong to one rack, without extra tubes, ammunition or fire channels. Switching back keeps sector 1 and can be undone. Unity supports both sectors; runtime use still requires rack binding and prefab muzzle calibration.',
+ '完整v3源已导出；在Unity显式绑定并校准对应Prefab后消费':'Complete v3 source exported. Bind it explicitly in Unity and calibrate the corresponding prefab before use.'
+});
