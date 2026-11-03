@@ -1,5 +1,6 @@
 /* 界面及画布系统词共用翻译；船名、编号、备注和独立用户文字保留原文。 */
 window.AMMLocale.register({
+  '成品舰配置 ↗':'Finished-ship configuration ↗',
   '1管':'1 tube',
   '单管目前用于编辑器草案与离线预览，尚未接入游戏。':'Single-tube launchers are available for editor drafts and offline previews; game integration is pending.',
   '每架支持1至5管，可连续放置；属性中可选双扇形射界。单管目前用于编辑器草案与离线预览，尚未接入游戏。静置方向和射界独立；射界初始未指定，按具体舰型与年代核对。':'Place racks with 1 to 5 tubes. Properties support two firing sectors. Single-tube support is for editor drafts and offline previews; game integration is pending. Resting heading and firing arcs are independent; verify unspecified arcs by ship and period.',
