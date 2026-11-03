@@ -1,5 +1,10 @@
 /* 界面及画布系统词共用翻译；船名、编号、备注和独立用户文字保留原文。 */
 window.AMMLocale.register({
+  '1管':'1 tube',
+  '单管目前用于编辑器草案与离线预览，尚未接入游戏。':'Single-tube launchers are available for editor drafts and offline previews; game integration is pending.',
+  '每架支持1至5管，可连续放置；属性中可选双扇形射界。单管目前用于编辑器草案与离线预览，尚未接入游戏。静置方向和射界独立；射界初始未指定，按具体舰型与年代核对。':'Place racks with 1 to 5 tubes. Properties support two firing sectors. Single-tube support is for editor drafts and offline previews; game integration is pending. Resting heading and firing arcs are independent; verify unspecified arcs by ship and period.',
+  '鱼雷架管数须为1至5；旧版仅支持3/4管':'Torpedo racks need 1 to 5 tubes; v1 files support only 3 or 4.',
+  '炮管数须为1–12；鱼雷管数须为1至5':'Gun barrels must be 1–12; torpedo tubes must be 1 to 5.',
   '俯视图':'Plan','纵向展开':'Profile','全舰横向叠加':'Transverse overlay','分舱':'Compartments','主甲板以下':'Below main deck','甲板室':'Deckhouse','层':'Level',
   '舰长':'Length','舰宽':'Beam','图纸单位':'units','图例':'Legend','高度':'Height',
   '装甲':'Armor','舰体侧面':'Hull side','甲板':'Deck','建筑侧面':'Structure side','建筑顶盖':'Structure roof','主炮侧面':'Turret side','主炮顶盖':'Turret roof',
