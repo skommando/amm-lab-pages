@@ -206,3 +206,15 @@ window.AMMLocale.register({
  '两区共同属于这一架，不增加管数、备弹或火力通道。切回单扇形仅保留射区1，可撤销。Unity已支持双射界；正式使用仍需完成雷架绑定与Prefab炮口校准。':'Both sectors belong to one rack, without extra tubes, ammunition or fire channels. Switching back keeps sector 1 and can be undone. Unity supports both sectors; runtime use still requires rack binding and prefab muzzle calibration.',
  '完整v3源已导出；在Unity显式绑定并校准对应Prefab后消费':'Complete v3 source exported. Bind it explicitly in Unity and calibrate the corresponding prefab before use.'
 });
+
+/* 鱼雷射界：翻译界面，不改变固定slot或用户数据。 */
+window.AMMLocale.register({
+ '鱼雷':'Torpedoes','双射角 · 固定编号':'Two sectors · Fixed slots','鱼雷射界模式：双射角':'Torpedo arcs: two sectors','鱼雷射界模式：单射角':'Torpedo arcs: one sector',
+ '切换为单射角':'Switch to one sector','切换为双射角':'Switch to two sectors','本架两角：已联动（点击拆开）':'This rack: linked sectors (unlink)','本架两角：独立（点击联动）':'This rack: independent sectors (link)',
+ '射角1中心°':'Sector 1 center °','射角2中心°':'Sector 2 center °','射角1完整开角°':'Sector 1 full width °','射角2完整开角°':'Sector 2 full width °','清空射角1':'Clear sector 1','清空射角2':'Clear sector 2','保留射角1':'Keep sector 1','保留射角2':'Keep sector 2',
+ '请选择保留射角，另一角将移除；可一次撤销。':'Choose a sector to keep. The other is removed; Undo restores it.',
+ '两架模式不一致：射界跨架联动暂停；初始朝向继续镜像。':'Rack modes differ: cross-rack arc linking is paused. Initial headings remain mirrored.',
+ '默认联动；中心取镜像，开角相同。开关保留已有差异，下一次修改才传播。两舷同步时，以正在编辑这架的本架联动设置为准。':'Linked by default: mirror centers and copy widths. Toggling keeps existing differences; the next edit propagates. Cross-rack edits use the internal linking setting of the rack being edited.',
+ '点击武器编辑射界：火炮单扇形，鱼雷单/双射角；点击舱格编辑分舱。炮位、船壳和身份均为只读。':'Select a weapon to edit its arc: one gun sector, or one/two torpedo sectors. Select a compartment to edit it. Mount positions, hull and identity are read-only.'
+});
+window.AMMLocale.registerPatterns([[/^独立配置 v(\d+) · 本地处理$/,n=>'Configuration v'+n+' · Local processing']]);
