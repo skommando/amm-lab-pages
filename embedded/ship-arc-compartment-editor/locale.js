@@ -218,3 +218,19 @@ window.AMMLocale.register({
  '点击武器编辑射界：火炮单扇形，鱼雷单/双射角；点击舱格编辑分舱。炮位、船壳和身份均为只读。':'Select a weapon to edit its arc: one gun sector, or one/two torpedo sectors. Select a compartment to edit it. Mount positions, hull and identity are read-only.'
 });
 window.AMMLocale.registerPatterns([[/^独立配置 v(\d+) · 本地处理$/,n=>'Configuration v'+n+' · Local processing']]);
+
+/* v3：枪炮双射界与可转不可射区域；总审计页统一验收。 */
+window.AMMLocale.register({
+ '火炮射界模式：双射角':'Gun arcs: two sectors','火炮射界模式：单射角':'Gun arcs: one sector',
+ '射界模式：双射角':'Firing arcs: two sectors','射界模式：单射角':'Firing arcs: one sector',
+ '可越界区 · 可转不可射':'Traverse-only zones · No firing','增加空白可越界区':'Add a blank traverse-only zone','清空可越界区':'Clear traverse-only zones','恢复可越界区预设':'Restore traverse-only presets',
+ '紫色虚线表示允许转过的禁火方向；与射界重叠处仍可开火。未指定缺口禁止转动，不自动补全。':'Purple dashes mark directions where the mount can rotate without firing. Overlapping firing arcs still allow fire. Unspecified gaps remain blocked.',
+ '全部射界已连通；可越界方向仅转动、不可射击':'All firing arcs are reachable. Traverse-only directions allow rotation without firing.',
+ '初始朝向不在可转角域内':'Initial heading is outside the allowed rotation domain','初始朝向无法到达全部射界连通分量':'Some firing arcs cannot be reached from the initial heading','请先填写完整射界与可越界区':'Complete the firing arcs and traverse-only zones first',
+ '可转不可射':'Traverse only','技术检查':'Technical checks','最终验收以总审计页面为准。':'Final acceptance is recorded on the fleet review page.'
+});
+window.AMMLocale.registerPatterns([
+ [/^越界区(\d+)中心°$/,n=>'Traverse zone '+n+' center °'],
+ [/^越界区(\d+)完整开角°$/,n=>'Traverse zone '+n+' full width °'],
+ [/^删除越界区(\d+)$/,n=>'Remove traverse zone '+n]
+]);
